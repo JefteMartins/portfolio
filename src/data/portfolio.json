@@ -2,12 +2,12 @@
   "meta": {
     "title": "Jefté Martins — Engenheiro de Software & Desenvolvedor .NET Full Stack",
     "description": "Portfólio profissional de Jefté Martins. Sistemas escaláveis em C#/.NET, pipelines ETL de alta volumetria e interfaces modernas em React & TypeScript.",
-    "resumeUrl": "/curriculo.pdf",
+    "resumeUrl": "./curriculo.pdf",
     "resumeNotice": "Currículo oficial em inglês (PDF)"
   },
   "background": {
-    "imageSrc": "/assets/background.jpg",
-    "videoSrc": "/assets/background.mp4",
+    "imageSrc": "./assets/background.jpg",
+    "videoSrc": "./assets/background.mp4",
     "desktopFocalX": 0.5,
     "mobileFocalX": 0.72,
     "focalY": 0.5
@@ -44,7 +44,7 @@
     },
     "secondaryCta": {
       "label": "Baixar Currículo",
-      "href": "/curriculo.pdf"
+      "href": "./curriculo.pdf"
     }
   },
   "about": {
@@ -130,7 +130,7 @@
       "stackSummary": "TypeScript · Canvas 2D · Zero Dependências · 60 FPS",
       "summary": "Biblioteca TypeScript que executa em tempo real neste portfólio: converte vídeo ou imagem ao vivo em 5 estágios progressivos (RAW, Drift, Particle, Hybrid e Binary) a 60 FPS — pronta para importar em qualquer projeto web.",
       "context": "Código-fonte aberto no GitHub e rodando ao vivo no fundo desta página — teste com qualquer imagem local via Alt + I.",
-      "imageSrc": "/assets/project-ascii-engine.jpg",
+      "imageSrc": "./assets/project-ascii-engine.jpg",
       "imageAlt": "Demonstração em 5 painéis dos estágios do motor gráfico: 01 RAW, 02 DRIFT, 03 PARTICLE, 04 HYBRID e 05 BINARY",
       "architectureFlow": ["Vídeo A/B (0.5s)", "Sample Offscreen", "Uint32Array Stamps", "5 Estágios"],
       "challenge": "Renderizar milhares de glifos por quadro sincronizados ao scroll contínuo e ao movimento da cena sem quedas de taxa de quadros, sem pressão de garbage collection e mantendo a legibilidade editorial.",
@@ -153,7 +153,7 @@
       "stackSummary": "React 19 · Electron · Tailwind v4 · PDF / CSV",
       "summary": "Aplicação web e desktop para montagem de grades horárias escolares com múltiplos professores, turmas e restrições de disponibilidade — eliminando conflitos de horário e reduzindo janelas docentes.",
       "context": "Repositório privado — entre em contato caso queira saber mais sobre o projeto ou ver uma demonstração.",
-      "imageSrc": "/assets/project-organizador-aulas.png",
+      "imageSrc": "./assets/project-organizador-aulas.png",
       "imageAlt": "Interface do HorarioProfs exibindo a grade automática de turmas sem janelas docentes e exportação em PDF",
       "architectureFlow": ["Cadastro Escolar", "Restrições & Regras", "Grade Assistida & Manual", "Diagnóstico & PDF"],
       "challenge": "Montar grades escolares manualmente entre múltiplas turmas, disciplinas e restrições individuais de professores consome dias da coordenação pedagógica e frequentemente gera choques de horário e janelas ociosas.",
@@ -174,7 +174,7 @@
       "stackSummary": ".NET 10 · C# · Blazor Server · MySQL · Docker · Testcontainers",
       "summary": "Sistema full-stack de gestão de pedidos e cardápio em Clean Architecture + DDD, com API REST versionada (/api/v1), painel operacional Blazor, observabilidade, Docker Compose e testes com MySQL real.",
       "context": "Repositório público com ambiente completo reproduzível em Docker Compose e esteira automatizada no GitHub Actions.",
-      "imageSrc": "/assets/project-goodhamburguer.png",
+      "imageSrc": "./assets/project-goodhamburguer.png",
       "imageAlt": "Painel operacional GoodHamburguer em Blazor Server conectado à API REST v1",
       "architectureFlow": ["Blazor Server", "API REST /api/v1", "Domain & Pricing", "EF Core + MySQL"],
       "challenge": "Estruturar uma aplicação .NET completa pronta para avaliação técnica — unindo regras de domínio isoladas, persistência relacional real, logs operacionais consultáveis e ambiente 100% reproduzível.",
