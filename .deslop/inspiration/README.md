@@ -1,0 +1,10 @@
+# Referências Curadas (Modo Econômico — `deslop`)
+
+Busca realizada em `darkmodedesign.com` e `minimal.gallery/tag/portfolio/` (2026-11-25), filtrada por `ai-aesthetics.md` e `taste.md` (descartando preloaders artificiais, cursores multiplayer e carrosséis 3D pesados).
+
+- `01-vladprozapas.com` (`darkmodedesign.com`) — **O que resolve bem:** Coexistência entre coluna editorial escura e canvas interativo à direita, além de tratar projetos corporativos sob NDA com foco em contexto arquitetural sem inventar mockups falsos. **O que levar:** Rotulagem contextual discreta de NDA/produção nos cases e sincronização visual clara da seção ativa.
+- `02-harish.xyz` (`darkmodedesign.com`) — **O que resolve bem:** Ritmo editorial escuro usando filetes verticais finos e listas limpas sem empilhar cards genéricos idênticos. **O que levar:** Substituir cards encaixotados repetidos por linhas editoriais em hairline e usar filete vertical discreto (`2px`) para destacar apenas o cargo atual.
+- `03-hipuku.dev` (`darkmodedesign.com`) — **O que resolve bem:** Navegação textual ultra-limpa com contadores em sobrescrito (`work⁶`) e telemetria real de performance no HUD sem poluição visual. **O que levar:** Contadores discretos em sobrescrito no Header (`Experiência⁵`, `Projetos³`) e exibição real do `FPS` ao vivo na barra de telemetria.
+- `04-carterogunsola.com` (`minimal.gallery`) — **O que resolve bem:** Micro-HUD técnico que transforma dados reais do motor (`FPS`, estado) em credibilidade imediata de engenharia. **O que levar:** Mostrar `60 FPS` real ao lado de `Scroll X%` no HUD inferior (sem adicionar métricas fictícias).
+- `05-mathiasadolfsson.dev` (`darkmodedesign.com`) — **O que resolve bem:** Silêncio extremo no cromo de interface, deixando a engenharia gráfica respirar. **O que levar:** Manter o cromo mínimo e evitar rótulos repetidos ("Arquitetura →") em cada linha de projeto.
+- `06-philipphafner.com` & `07-oscarpecher.com` (`minimal.gallery`) — **O que resolve bem:** Separação clara entre metadados periféricos e títulos principais no modo escuro. **O que levar:** Reforçar a economia de palavras nas ações secundárias e manter o foco no conteúdo real.

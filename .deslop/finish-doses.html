@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parada 4 — Doses de Acabamento</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: #050608;
+        color: #f3f4f6;
+        font-family: "Switzer", system-ui, sans-serif;
+        padding: 16px 20px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .top h1 { font-size: 15px; font-weight: 600; }
+      .top span { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #9ca3af; }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .col {
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #07080a;
+      }
+      .col-head {
+        padding: 10px 12px;
+        background: #0c0e12;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+      .col-head h2 { font-size: 13px; font-weight: 600; color: #f3f4f6; }
+      .col-head p { font-size: 11px; color: #9ca3af; margin-top: 2px; line-height: 1.35; }
+      .frame-wrap {
+        width: 100%;
+        height: 760px;
+        overflow: hidden;
+        position: relative;
+      }
+      iframe {
+        width: 1080px;
+        height: 1850px;
+        border: 0;
+        transform: scale(0.418);
+        transform-origin: top left;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <h1>Parada 4 — Comparação das Doses de Acabamento (Mesma tela, mesmos dados)</h1>
+      <span>1. Sem acabamento (none) · 2. Dose leve (light) · 3. Dose média (medium)</span>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <div class="col-head">
+          <h2>1. Sem acabamento (Cru)</h2>
+          <p>Superfícies 100% chapadas, borda uniforme nos 4 lados, zero luz direcional ou sombra nas camadas flutuantes.</p>
+        </div>
+        <div class="frame-wrap">
+          <iframe id="f-none" src="/?finish=none"></iframe>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-head">
+          <h2>2. Dose leve (Recomendada)</h2>
+          <p>Uma luz superior sutil (aresta iluminada no topo), sombra curta realista só no que flutua e volume tonal discreto.</p>
+        </div>
+        <div class="frame-wrap">
+          <iframe id="f-light" src="/?finish=light"></iframe>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-head">
+          <h2>3. Dose média</h2>
+          <p>Luz direcional mais marcada nos painéis e modais, sombra mais funda e grão cinematográfico sutil sobre a cena.</p>
+        </div>
+        <div class="frame-wrap">
+          <iframe id="f-medium" src="/?finish=medium"></iframe>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Rola os 3 iframes para a Seção 3 (Projetos + ASCII) para evidenciar superfícies, botão, header e telemetria ao mesmo tempo
+      ['f-none', 'f-light', 'f-medium'].forEach((id) => {
+        const el = document.getElementById(id);
+        el.addEventListener('load', () => {
+          setTimeout(() => {
+            const target = el.contentDocument?.getElementById('projetos');
+            if (target) {
+              el.contentWindow.scrollTo(0, target.offsetTop - 76);
+            }
+          }, 350);
+        });
+      });
+    </script>
+  </body>
+</html>

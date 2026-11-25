@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR" data-finish="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jefté Martins — Engenheiro de Software &amp; Desenvolvedor .NET Full Stack</title>
+    <meta
+      name="description"
+      content="Portfólio profissional de Jefté Martins. Sistemas escaláveis em C#/.NET, pipelines ETL de alta volumetria e interfaces modernas em React &amp; TypeScript."
+    />
+    <meta name="theme-color" content="#07080A" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Switzer (Fontshare) — estritamente 2 pesos (400 e 600); JetBrains Mono empacotada localmente -->
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=switzer@400,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Canvas fixo em tela cheia (z-index: 0) -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <!-- Vinheta direcional para preservar contraste AA+ na coluna editorial -->
+    <div class="reading-scrim" aria-hidden="true"></div>
+    <div class="finish-grain" aria-hidden="true"></div>
+
+    <!-- Indicador de Shift + Arrastar imagem -->
+    <div id="drop-overlay" class="drop-overlay" hidden aria-live="polite">
+      <div class="drop-overlay__box floating-glass">
+        <span class="mono-label">Modo de teste de imagem</span>
+        <p>Solte a imagem para testar a desconstrução em tempo real nos 4 estágios</p>
+      </div>
+    </div>
+
+    <!-- Raiz da aplicação -->
+    <div id="app"></div>
+
+    <!-- Input oculto para teste rápido de imagens (Alt + I) -->
+    <input
+      id="image-picker"
+      type="file"
+      accept="image/*"
+      tabindex="-1"
+      hidden
+      aria-label="Selecionar imagem local para testar no fundo"
+    />
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

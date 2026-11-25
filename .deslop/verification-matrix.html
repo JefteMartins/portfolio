@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Verificação — 5 Estágios (RAW · CLASSIC · DRIFT · HYBRID · BIN)</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: #040507;
+        color: #f3f4f6;
+        font-family: "Switzer", system-ui, sans-serif;
+        padding: 16px 20px;
+      }
+      .hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .hdr h1 { font-size: 14px; font-weight: 600; }
+      .hdr span { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #b4bcc8; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .cell {
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #07080a;
+      }
+      .cell-bar {
+        padding: 6px 10px;
+        background: #0c0e12;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+      }
+      .wrap {
+        width: 456px;
+        height: 285px;
+        overflow: hidden;
+        position: relative;
+      }
+      .wrap iframe {
+        width: 1440px;
+        height: 900px;
+        border: 0;
+        transform: scale(0.3166);
+        transform-origin: top left;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hdr">
+      <h1>Pipeline de 5 Estágios — Desktop 1440×900</h1>
+      <span>01 RAW (0%) · 02 DRIFT (28%) · 03 PARTICLE (51%) · 04 HYBRID (72%) · 05 BIN (100%)</span>
+    </div>
+    <div class="grid">
+      <div class="cell">
+        <div class="cell-bar"><span>01 RAW — Normal</span><span>Scroll 0%</span></div>
+        <div class="wrap"><iframe data-pct="0" src="/"></iframe></div>
+      </div>
+      <div class="cell">
+        <div class="cell-bar"><span>02 DRIFT — Micro-ASCII + Rastro</span><span>Scroll 28%</span></div>
+        <div class="wrap"><iframe data-pct="0.28" src="/"></iframe></div>
+      </div>
+      <div class="cell">
+        <div class="cell-bar"><span>03 PARTICLE — Nuvem de Grãos</span><span>Scroll 51%</span></div>
+        <div class="wrap"><iframe data-pct="0.51" src="/"></iframe></div>
+      </div>
+      <div class="cell">
+        <div class="cell-bar"><span>04 HYBRID — Drift → Binário</span><span>Scroll 72%</span></div>
+        <div class="wrap"><iframe data-pct="0.72" src="/"></iframe></div>
+      </div>
+      <div class="cell">
+        <div class="cell-bar"><span>05 BIN — P&amp;B Alta Legibilidade</span><span>Scroll 100%</span></div>
+        <div class="wrap"><iframe data-pct="1" src="/"></iframe></div>
+      </div>
+    </div>
+    <script>
+      document.querySelectorAll('iframe').forEach((frame) => {
+        frame.addEventListener('load', () => {
+          const pct = parseFloat(frame.dataset.pct || '0');
+          const applyScroll = () => {
+            const doc = frame.contentDocument?.documentElement;
+            if (!doc) return;
+            const max = Math.max(doc.scrollHeight - frame.contentWindow.innerHeight, 0);
+            frame.contentWindow.scrollTo({ top: max * pct, behavior: 'instant' });
+          };
+          setTimeout(applyScroll, 300);
+          setTimeout(applyScroll, 900);
+        });
+      });
+    </script>
+  </body>
+</html>

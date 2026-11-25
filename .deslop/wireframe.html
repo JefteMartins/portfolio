@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wireframe Cinza — Duas Organizações (Parada 3)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #e4e4e7;
+      color: #18181b;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px 24px;
+      line-height: 1.4;
+    }
+    .top-note {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #a1a1aa;
+    }
+    .top-note h1 { font-size: 16px; font-weight: 700; }
+    .top-note span { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; color: #52525b; }
+
+    .grid-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .option {
+      background: #f4f4f5;
+      border: 2px solid #71717a;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #d4d4d8;
+    }
+    .option-header h2 { font-size: 14px; font-weight: 700; }
+    .option-header p { font-size: 12px; color: #52525b; margin-top: 2px; }
+    .badge {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      border: 1px solid #52525b;
+      background: #e4e4e7;
+      white-space: nowrap;
+    }
+
+    /* Viewport frame simulating dark-canvas structure in pure grayscale */
+    .viewport {
+      position: relative;
+      background: #d4d4d8;
+      border: 1px solid #71717a;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hud-bar {
+      background: #fafafa;
+      border: 1px solid #71717a;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      z-index: 2;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    /* Right-side Koi Canvas Zone indicator */
+    .stage-row {
+      position: relative;
+      border: 1px dashed #71717a;
+      background: #e4e4e7;
+      padding: 10px;
+      min-height: 148px;
+      display: grid;
+      grid-template-columns: 57% 43%;
+      gap: 10px;
+    }
+    .stage-row.full-bleed {
+      grid-template-columns: 100%;
+    }
+    .stage-tag {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-family: ui-monospace, monospace;
+      font-size: 10px;
+      color: #3f3f46;
+      background: #d4d4d8;
+      padding: 1px 5px;
+      border: 1px solid #71717a;
+    }
+    .content-col {
+      background: #f4f4f5;
+      border: 1px solid #a1a1aa;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .canvas-zone {
+      border: 1px dotted #52525b;
+      background: repeating-linear-gradient(-45deg, #d4d4d8, #d4d4d8 6px, #dcdce0 6px, #dcdce0 12px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+      font-family: ui-monospace, monospace;
+      font-size: 10px;
+      color: #3f3f46;
+    }
+    .koi-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 1.5px dashed #3f3f46;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      background: #e4e4e7;
+      font-size: 9px;
+    }
+
+    .wf-kicker { font-size: 10px; color: #52525b; font-family: ui-monospace, monospace; }
+    .wf-h1 { font-size: 17px; font-weight: 700; }
+    .wf-h2 { font-size: 13px; font-weight: 700; }
+    .wf-line { height: 7px; background: #a1a1aa; width: 92%; }
+    .wf-line.short { width: 65%; }
+    .wf-btn-row { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+    .wf-btn { background: #27272a; color: #fafafa; font-size: 10px; padding: 4px 8px; }
+    .wf-link { font-size: 10px; text-decoration: underline; color: #27272a; }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 8px;
+      padding-top: 5px;
+      border-top: 1px solid #d4d4d8;
+      font-size: 10px;
+    }
+    .tl-date { font-family: ui-monospace, monospace; color: #52525b; font-size: 9.5px; }
+
+    .stack-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10px;
+    }
+    .stack-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 6px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid #e4e4e7;
+    }
+    .proj-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 4px;
+    }
+    .proj-row {
+      border: 1px solid #71717a;
+      background: #fafafa;
+      padding: 5px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+    }
+
+    .three-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .wf-card {
+      border: 1px solid #71717a;
+      background: #fafafa;
+      padding: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    .contact-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #d4d4d8;
+      padding-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-note">
+    <h1>Wireframe Cinza (Sem cor / Sem fonte da marca) — Parada 3</h1>
+    <span>Comparação de estrutura espacial: relação entre leitura editorial e área viva das carpas</span>
+  </div>
+
+  <div class="grid-compare">
+    <!-- ORGANIZAÇÃO A -->
+    <section class="option">
+      <div class="option-header">
+        <div>
+          <h2>Organização A — Coluna Editorial Contínua (57% / 43%)</h2>
+          <p>Toda a leitura corre à esquerda; a janela direita fica 100% livre nos 4 estágios para ver as carpas virarem Braille, ASCII e Binário sem obstrução.</p>
+        </div>
+        <span class="badge">Recomendada</span>
+      </div>
+
+      <div class="viewport">
+        <div class="hud-bar">
+          <strong>JEFTÉ MARTINS</strong>
+          <span>Sobre &nbsp; Experiência &nbsp; Projetos &nbsp; Contato &nbsp; | &nbsp; [Currículo ↗]</span>
+        </div>
+
+        <!-- 01 RAW -->
+        <div class="stage-row">
+          <div class="content-col">
+            <span class="wf-kicker">Fortaleza, CE · Inglês C2 · Full Stack &amp; DevOps</span>
+            <div class="wf-h1">Jefté Martins</div>
+            <div style="font-size:11px;font-weight:600;">Engenheiro de Software &amp; Desenvolvedor .NET Full Stack</div>
+            <div class="wf-line"></div>
+            <div class="wf-line short"></div>
+            <div class="wf-btn-row">
+              <span class="wf-btn">Explorar trajetória ↓</span>
+              <span class="wf-link">Ir para contato →</span>
+            </div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">01 RAW (0–20%)</span>
+            <div class="koi-circle">Carpas<br/>Nítidas</div>
+            <span>Vídeo/Imagem viva<br/>sem sobreposição</span>
+          </div>
+        </div>
+
+        <!-- 02 BRAILLE -->
+        <div class="stage-row">
+          <div class="content-col">
+            <div class="wf-h2">Sobre &amp; Experiência</div>
+            <div class="wf-line"></div>
+            <div class="tl-item"><span class="tl-date">2026–Atual</span><div><strong>OSF Digital</strong> — Eng. Software (Hyatt / .NET / React)</div></div>
+            <div class="tl-item"><span class="tl-date">2024–2026</span><div><strong>Quiver Soluções</strong> — Full Stack (C# / ETL SQL Server)</div></div>
+            <div class="tl-item"><span class="tl-date">2023–2024</span><div><strong>Keepee</strong> · <strong>Atlântico (Dell)</strong> · <strong>Tactium</strong> (+3 linhas)</div></div>
+            <div class="wf-kicker" style="margin-top:2px;">UFC (SMD) · Pós DevOps UNOPAR · EF SET C2 (75/100)</div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">02 BRAILLE (20–50%)</span>
+            <div class="koi-circle">⠀⠁⠃⠇⠏<br/>⠟⠿⡿⣿</div>
+            <span>Malha 6–8px visível</span>
+          </div>
+        </div>
+
+        <!-- 03 ASCII -->
+        <div class="stage-row">
+          <div class="content-col">
+            <div class="wf-h2">Stack &amp; Projetos Selecionados</div>
+            <div class="stack-lines">
+              <div class="stack-row"><span class="mono">Back-end</span><span>C# · .NET Core · ASP.NET · EF · SQL</span></div>
+              <div class="stack-row"><span class="mono">Front-end</span><span>React · TypeScript · Next · Vue · SPFx</span></div>
+              <div class="stack-row"><span class="mono">DevOps</span><span>SQL Server ETL · Postgres · Docker · CI/CD</span></div>
+            </div>
+            <div class="proj-list">
+              <div class="proj-row"><span><strong class="mono">01</strong> Pipeline ETL Alta Volumetria</span><span class="mono">[Detalhes → Modal]</span></div>
+              <div class="proj-row"><span><strong class="mono">02</strong> Biblioteca Enterprise SPFx</span><span class="mono">[Detalhes → Modal]</span></div>
+              <div class="proj-row"><span><strong class="mono">03</strong> Motor ASCII / Binário</span><span class="mono">[Detalhes → Modal]</span></div>
+            </div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">03 ASCII (50–80%)</span>
+            <div class="koi-circle">.:-=+*<br/>#%@</div>
+            <span>Silhueta ASCII livre<br/>ao lado dos projetos</span>
+          </div>
+        </div>
+
+        <!-- 04 BINARY -->
+        <div class="stage-row" style="min-height:112px;">
+          <div class="content-col">
+            <div class="wf-h2">Vamos construir algo sólido?</div>
+            <div class="contact-links">
+              <div class="contact-row"><span class="mono">jefte.martins@hotmail.com</span><span class="mono">[Copiar]</span></div>
+              <div class="contact-row"><span>LinkedIn /in/jeftemartins</span><span class="mono">↗</span></div>
+              <div class="contact-row"><span>GitHub /JefteMartins</span><span class="mono">↗</span></div>
+            </div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">04 BIN (80–100%)</span>
+            <div class="koi-circle">01101<br/>10010</div>
+            <span>Alto contraste 0/1</span>
+          </div>
+        </div>
+
+        <div class="hud-bar mono">
+          <span>[01 RAW] · 02 BRAILLE · 03 ASCII · 04 BIN</span>
+          <span>━━━━━─────────── 0.32 &nbsp; [Img Alt+I]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIZAÇÃO B -->
+    <section class="option">
+      <div class="option-header">
+        <div>
+          <h2>Organização B — Ritmo Alternado (Coluna + Grade Larga na Seção 3)</h2>
+          <p>Hero, Experiência e Contato à esquerda, mas Stack e Projetos abrem em 3 colunas de largura total (cobrindo as carpas durante o estágio ASCII).</p>
+        </div>
+        <span class="badge">Alternativa</span>
+      </div>
+
+      <div class="viewport">
+        <div class="hud-bar">
+          <strong>JEFTÉ MARTINS</strong>
+          <span>Sobre &nbsp; Experiência &nbsp; Projetos &nbsp; Contato &nbsp; | &nbsp; [Currículo ↗]</span>
+        </div>
+
+        <!-- 01 RAW -->
+        <div class="stage-row">
+          <div class="content-col">
+            <span class="wf-kicker">Fortaleza, CE · Inglês C2 · Full Stack &amp; DevOps</span>
+            <div class="wf-h1">Jefté Martins</div>
+            <div style="font-size:11px;font-weight:600;">Engenheiro de Software &amp; Desenvolvedor .NET Full Stack</div>
+            <div class="wf-line"></div>
+            <div class="wf-line short"></div>
+            <div class="wf-btn-row">
+              <span class="wf-btn">Explorar trajetória ↓</span>
+              <span class="wf-link">Ir para contato →</span>
+            </div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">01 RAW (0–20%)</span>
+            <div class="koi-circle">Carpas<br/>Nítidas</div>
+            <span>Vídeo/Imagem viva</span>
+          </div>
+        </div>
+
+        <!-- 02 BRAILLE -->
+        <div class="stage-row">
+          <div class="content-col">
+            <div class="wf-h2">Sobre &amp; Experiência</div>
+            <div class="wf-line"></div>
+            <div class="tl-item"><span class="tl-date">2026–Atual</span><div><strong>OSF Digital</strong> — Eng. Software (Hyatt / .NET / React)</div></div>
+            <div class="tl-item"><span class="tl-date">2024–2026</span><div><strong>Quiver Soluções</strong> — Full Stack (C# / ETL SQL Server)</div></div>
+            <div class="tl-item"><span class="tl-date">2023–2024</span><div><strong>Keepee</strong> · <strong>Atlântico (Dell)</strong> · <strong>Tactium</strong> (+3 linhas)</div></div>
+            <div class="wf-kicker" style="margin-top:2px;">UFC (SMD) · Pós DevOps UNOPAR · EF SET C2 (75/100)</div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">02 BRAILLE (20–50%)</span>
+            <div class="koi-circle">⠀⠁⠃⠇⠏<br/>⠟⠿⡿⣿</div>
+            <span>Malha 6–8px visível</span>
+          </div>
+        </div>
+
+        <!-- 03 ASCII FULL WIDTH -->
+        <div class="stage-row full-bleed">
+          <div class="content-col" style="background: rgba(244,244,245,0.92);">
+            <span class="stage-tag">03 ASCII (50–80% atrás dos cards)</span>
+            <div class="wf-h2">Stack &amp; Projetos em Grade de 3 Colunas</div>
+            <div class="three-cards">
+              <div class="wf-card"><strong class="mono">Back-end</strong><span>C#, .NET Core, ASP.NET, EF, Node</span></div>
+              <div class="wf-card"><strong class="mono">Front-end</strong><span>React, TS, Next.js, Vue/Quasar, SPFx</span></div>
+              <div class="wf-card"><strong class="mono">Dados &amp; DevOps</strong><span>SQL Server ETL, Postgres, Docker, CI/CD</span></div>
+            </div>
+            <div class="three-cards">
+              <div class="wf-card"><span class="mono">01</span><strong>Pipeline ETL</strong><span>.NET + SQL Server</span><span class="wf-link">[Abrir Modal]</span></div>
+              <div class="wf-card"><span class="mono">02</span><strong>Componentes SPFx</strong><span>React + TS</span><span class="wf-link">[Abrir Modal]</span></div>
+              <div class="wf-card"><span class="mono">03</span><strong>Motor ASCII/Bin</strong><span>Canvas + TS</span><span class="wf-link">[Abrir Modal]</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 BINARY -->
+        <div class="stage-row" style="min-height:112px;">
+          <div class="content-col">
+            <div class="wf-h2">Vamos construir algo sólido?</div>
+            <div class="contact-links">
+              <div class="contact-row"><span class="mono">jefte.martins@hotmail.com</span><span class="mono">[Copiar]</span></div>
+              <div class="contact-row"><span>LinkedIn /in/jeftemartins</span><span class="mono">↗</span></div>
+              <div class="contact-row"><span>GitHub /JefteMartins</span><span class="mono">↗</span></div>
+            </div>
+          </div>
+          <div class="canvas-zone">
+            <span class="stage-tag">04 BIN (80–100%)</span>
+            <div class="koi-circle">01101<br/>10010</div>
+            <span>Alto contraste 0/1</span>
+          </div>
+        </div>
+
+        <div class="hud-bar mono">
+          <span>[01 RAW] · 02 BRAILLE · 03 ASCII · 04 BIN</span>
+          <span>━━━━━─────────── 0.32 &nbsp; [Img Alt+I]</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

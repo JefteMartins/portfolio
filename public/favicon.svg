@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <!-- Base escura com borda hairline para contraste em abas claras e escuras -->
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="7.25" fill="#07080A" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1.5"/>
+
+  <!-- Anel sutil de água -->
+  <circle cx="16" cy="16" r="10.5" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="0.9"/>
+
+  <!-- Carpa superior (RAW): arco orgânico contínuo afunilando da cabeça para a cauda -->
+  <path
+    d="M 21.8 11.4 C 19.6 7.8, 13.8 7.5, 10.6 10.7 C 8.4 12.9, 8.1 16.4, 9.7 19.1 C 9.9 16.3, 11.2 14.0, 13.4 12.7 C 15.8 11.3, 18.8 11.5, 20.8 12.7 C 21.7 13.2, 22.3 12.2, 21.8 11.4 Z"
+    fill="#F3F4F6"
+  />
+
+  <!-- Carpa inferior (PARTICLE / BIN): órbita espelhada desconstruída em partículas progressivas -->
+  <rect x="10.0" y="19.6" width="2.6" height="2.6" rx="0.8" fill="#F3F4F6"/>
+  <rect x="13.4" y="21.0" width="2.4" height="2.4" rx="0.7" fill="#F3F4F6"/>
+  <rect x="16.8" y="20.8" width="2.2" height="2.2" rx="0.6" fill="#E5E7EB"/>
+  <rect x="19.7" y="19.2" width="2.0" height="2.0" rx="0.6" fill="#D1D5DB"/>
+  <rect x="21.6" y="16.6" width="1.8" height="1.8" rx="0.5" fill="#B4BCC8"/>
+  <rect x="22.0" y="13.7" width="1.5" height="1.5" rx="0.4" fill="#9CA3AF"/>
+  <!-- Partícula solta de deriva -->
+  <rect x="14.2" y="18.2" width="1.4" height="1.4" rx="0.4" fill="#9CA3AF" fill-opacity="0.75"/>
+</svg>

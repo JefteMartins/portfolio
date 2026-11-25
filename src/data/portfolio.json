@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "title": "Jefté Martins — Engenheiro de Software & Desenvolvedor .NET Full Stack",
+    "description": "Portfólio profissional de Jefté Martins. Sistemas escaláveis em C#/.NET, pipelines ETL de alta volumetria e interfaces modernas em React & TypeScript.",
+    "resumeUrl": "/curriculo.pdf",
+    "resumeNotice": "Versão gerada a partir dos dados do portfólio"
+  },
+  "background": {
+    "imageSrc": "/assets/background.jpg",
+    "videoSrc": "/assets/background.mp4",
+    "desktopFocalX": 0.5,
+    "mobileFocalX": 0.72,
+    "focalY": 0.5
+  },
+  "navigation": {
+    "brand": "JEFTÉ MARTINS",
+    "links": [
+      { "label": "Sobre", "href": "#sobre" },
+      { "label": "Experiência", "href": "#experiencia" },
+      { "label": "Projetos", "href": "#projetos" },
+      { "label": "Contato", "href": "#contato" }
+    ],
+    "resumeLabel": "Currículo"
+  },
+  "telemetry": [
+    { "code": "01", "label": "RAW", "target": "#hero", "range": [0.0, 0.18] },
+    { "code": "02", "label": "DRIFT", "target": "#sobre", "range": [0.18, 0.4] },
+    { "code": "03", "label": "PARTICLE", "target": "#experiencia", "range": [0.4, 0.62] },
+    { "code": "04", "label": "HYBRID", "target": "#projetos", "range": [0.62, 0.82] },
+    { "code": "05", "label": "BIN", "target": "#contato", "range": [0.82, 1.0] }
+  ],
+  "hero": {
+    "name": "Jefté Martins",
+    "subtitle": "Engenheiro de Software & Desenvolvedor .NET Full Stack",
+    "pitch": "Construindo sistemas escaláveis em C#/.NET e interfaces modernas com React & TypeScript — da arquitetura de dados ao acabamento visual.",
+    "metadata": [
+      "Fortaleza, CE",
+      "Inglês C2 Proficient",
+      "Full Stack & DevOps"
+    ],
+    "primaryCta": {
+      "label": "Explorar trajetória",
+      "href": "#sobre"
+    },
+    "secondaryCta": {
+      "label": "Baixar Currículo",
+      "href": "/curriculo.pdf"
+    }
+  },
+  "about": {
+    "sectionTitle": "Sobre & Experiência",
+    "summary": "Desenvolvedor Full Stack formado em Sistemas e Mídias Digitais pela UFC e pós-graduado em DevOps pela UNOPAR, atuando de ponta a ponta entre back-end de alta volumetria (.NET, C#, SQL Server, PostgreSQL), pipelines ETL e front-end moderno (React, TypeScript, Vue/Quasar).",
+    "educationTitle": "Formação & Certificações",
+    "education": [
+      {
+        "institution": "Universidade Federal do Ceará (UFC)",
+        "credential": "Bacharelado em Sistemas e Mídias Digitais"
+      },
+      {
+        "institution": "UNOPAR",
+        "credential": "Pós-graduação em DevOps"
+      },
+      {
+        "institution": "EF SET English Certificate",
+        "credential": "75/100 — C2 Proficient"
+      }
+    ]
+  },
+  "experiences": [
+    {
+      "company": "OSF Digital",
+      "role": "Engenheiro de Software",
+      "period": "Mai 2026 – Atual",
+      "current": true,
+      "description": "Atuação Full Stack para Hotéis Hyatt utilizando React, SharePoint CSOM, .NET e PostgreSQL; evolução de microsserviços e ganho de performance em portais corporativos."
+    },
+    {
+      "company": "Quiver Soluções",
+      "role": "Desenvolvedor Full Stack",
+      "period": "Mar 2024 – Mai 2026",
+      "current": false,
+      "description": "Back-end em C# e ASP.NET Core no mercado de seguros; arquitetura e otimização de pipelines ETL para alta volumetria em SQL Server/T-SQL, extração estruturada via Regex e modernização de legados .NET Framework."
+    },
+    {
+      "company": "Keepee Facilities",
+      "role": "Desenvolvedor Full Stack",
+      "period": "Jul 2023 – Jan 2024",
+      "current": false,
+      "description": "Evolução de produto SaaS com Vue.js (Quasar), .NET Core e SQL Server; supervisão de QA nas entregas e mentoria técnica de estagiários."
+    },
+    {
+      "company": "Instituto Atlântico",
+      "role": "Analista de Sistemas",
+      "period": "Jun 2022 – Fev 2023",
+      "current": false,
+      "description": "Projeto internacional para a Dell Technologies junto a equipes dos EUA e da Índia em inglês; construção de biblioteca de componentes reutilizáveis em React + TypeScript para SharePoint SPFx."
+    },
+    {
+      "company": "TACTIUM BRASIL",
+      "role": "Desenvolvedor .NET",
+      "period": "Ago 2021 – Mai 2022",
+      "current": false,
+      "description": "Desenvolvimento Full Stack com C#/.NET Framework, APIs REST, HTML/CSS/JS, Bootstrap e stored procedures em SQL Server."
+    }
+  ],
+  "stackSection": {
+    "sectionTitle": "Stack & Projetos Selecionados",
+    "categories": [
+      {
+        "name": "Back-end",
+        "items": ["C#", ".NET Core", "ASP.NET Core", ".NET Framework", "Web API", "Entity Framework", "Node.js", "REST"]
+      },
+      {
+        "name": "Front-end",
+        "items": ["React", "TypeScript", "Next.js", "Vue / Quasar", "SharePoint SPFx / CSOM", "HTML5/CSS3"]
+      },
+      {
+        "name": "Dados & DevOps",
+        "items": ["SQL Server (T-SQL, ETL, Procedures)", "PostgreSQL", "MongoDB", "Docker", "CI/CD", "Azure DevOps", "Git"]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "etl-alta-volumetria",
+      "index": "01",
+      "title": "Pipeline ETL & Processamento de Alta Volumetria",
+      "stackSummary": ".NET · C# · SQL Server · T-SQL · Regex",
+      "summary": "Ingestão, higienização e conciliação em lote de documentos e apólices no setor de seguros com foco em previsibilidade de memória e throughput transacional.",
+      "context": "Arquitetura derivada de cenários reais de processamento crítico no mercado de seguros (dados sensíveis proprietários omitidos).",
+      "challenge": "Processar grandes lotes heterogêneos de dados semiestruturados sem bloquear tabelas transacionais nem degradar o tempo de resposta das APIs principais.",
+      "decisions": [
+        "Parsing determinístico em C# com expressões regulares compiladas e leitura em stream para reduzir alocações na Large Object Heap.",
+        "Carga em estágios (staging tables) com T-SQL orientado a conjuntos, índices filtrados e lotes controlados para evitar lock escalation no SQL Server.",
+        "Registro estruturado de falhas por lote para reprocessamento idempotente e rastreabilidade operacional."
+      ],
+      "technologies": ["C#", "ASP.NET Core", ".NET Framework", "SQL Server", "T-SQL", "Stored Procedures", "Regex"],
+      "repoUrl": "https://github.com/JefteMartins",
+      "repoLabel": "Ver perfil no GitHub"
+    },
+    {
+      "id": "biblioteca-spfx-enterprise",
+      "index": "02",
+      "title": "Biblioteca de Componentes Enterprise",
+      "stackSummary": "React · TypeScript · SharePoint SPFx / CSOM",
+      "summary": "Design system modular de web parts e controles reutilizáveis para portais corporativos globais, garantindo tipagem estrita e consistência entre múltiplos times.",
+      "context": "Padrão arquitetural aplicado em portais corporativos internacionais (Dell Technologies e ecossistema enterprise em inglês).",
+      "challenge": "Padronizar interfaces complexas dentro das restrições do ecossistema SharePoint mantendo isolamento de estilos, acessibilidade por teclado e contratos claros entre front-end e APIs.",
+      "decisions": [
+        "Contratos em TypeScript estrito desacoplando a camada visual em React dos adaptadores de dados SharePoint SPFx/CSOM e APIs REST.",
+        "Componentização orientada a composição para evitar duplicação de lógica de estado, filtros e estados vazios/erro entre portais.",
+        "Integração em esteiras CI/CD com validação estática para entregas coordenadas entre equipes distribuídas."
+      ],
+      "technologies": ["React", "TypeScript", "SharePoint SPFx", "CSOM", "REST APIs", "HTML5/CSS3", "Azure DevOps"],
+      "repoUrl": "https://github.com/JefteMartins",
+      "repoLabel": "Ver perfil no GitHub"
+    },
+    {
+      "id": "motor-ascii-binario",
+      "index": "03",
+      "title": "Motor de Desconstrução Visual ASCII/Binário",
+      "stackSummary": "Canvas 2D · TypeScript · Amostragem em Tempo Real",
+      "summary": "Pipeline gráfico que executa neste próprio portfólio: converte vídeo e imagem ao vivo em 5 estágios progressivos (RAW, Drift com rastro de partículas, Particle, Hybrid e Binário) a 60 FPS.",
+      "context": "Código-fonte aberto e executando em tempo real no fundo desta página — teste agora pressionando Alt + I para carregar qualquer imagem local.",
+      "challenge": "Renderizar milhares de glifos por quadro sincronizados ao scroll contínuo e ao movimento da água sem quedas de taxa de quadros nem perda de contraste da tipografia editorial.",
+      "decisions": [
+        "Downsampling em buffer offscreen proporcional à célula do estágio (7px a 16px), reduzindo drasticamente a leitura de pixels por frame.",
+        "Rasterizador em Uint32Array com cache esparso de carimbos de glifos pré-renderizados, eliminando chamadas repetidas de fillText e alocações por quadro.",
+        "Limiar dinâmico por percentil de luminância no estágio Binário (0/1) para preservar a silhueta reconhecível em qualquer imagem enviada via Alt + I."
+      ],
+      "technologies": ["TypeScript", "HTML5 Canvas", "Vite", "Processamento de Imagem", "Web Performance (60 FPS)"],
+      "repoUrl": "https://github.com/JefteMartins",
+      "repoLabel": "Ver perfil no GitHub"
+    }
+  ],
+  "contact": {
+    "sectionTitle": "Vamos construir algo sólido?",
+    "lead": "Disponível para conversas sobre arquitetura .NET, produtos Full Stack e engenharia de software.",
+    "email": "jefte.martins@hotmail.com",
+    "copyLabel": "Copiar e-mail",
+    "copiedLabel": "Copiado",
+    "links": [
+      {
+        "label": "LinkedIn",
+        "handle": "/in/jeftemartins",
+        "url": "https://www.linkedin.com/in/jeftemartins"
+      },
+      {
+        "label": "GitHub",
+        "handle": "/JefteMartins",
+        "url": "https://github.com/JefteMartins"
+      }
+    ]
+  }
+}
