@@ -195,7 +195,7 @@ function renderApp(): void {
           <a
             class="resume-btn"
             href="${escapeHtml(data.meta.resumeUrl)}"
-            download="Jefte-Martins-Curriculo.pdf"
+            download="Jefte-Martins-Resume.pdf"
             title="${escapeHtml(data.meta.resumeNotice)}"
           >
             <span>${escapeHtml(data.navigation.resumeLabel)}</span>
@@ -221,7 +221,7 @@ function renderApp(): void {
             <a
               class="btn-secondary-link"
               href="${escapeHtml(data.hero.secondaryCta.href)}"
-              download="Jefte-Martins-Curriculo.pdf"
+              download="Jefte-Martins-Resume.pdf"
               title="${escapeHtml(data.meta.resumeNotice)}"
             >
               <span>${escapeHtml(data.hero.secondaryCta.label)}</span>
