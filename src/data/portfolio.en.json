@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "title": "Jefté Martins — Software Engineer & .NET Full Stack Developer",
+    "description": "Professional portfolio of Jefté Martins. Scalable C#/.NET systems, high-volume ETL pipelines, and modern React & TypeScript interfaces.",
+    "resumeUrl": "./curriculo.pdf",
+    "resumeNotice": "Official English resume (PDF)"
+  },
+  "background": {
+    "imageSrc": "./assets/background.jpg",
+    "videoSrc": "./assets/background.mp4",
+    "desktopFocalX": 0.5,
+    "mobileFocalX": 0.72,
+    "focalY": 0.5
+  },
+  "navigation": {
+    "brand": "JEFTÉ MARTINS",
+    "links": [
+      { "label": "About", "href": "#sobre" },
+      { "label": "Experience", "href": "#experiencia" },
+      { "label": "Projects", "href": "#projetos" },
+      { "label": "Contact", "href": "#contato" }
+    ],
+    "resumeLabel": "Resume"
+  },
+  "telemetry": [
+    { "code": "01", "label": "RAW", "target": "#hero", "range": [0.0, 0.18] },
+    { "code": "02", "label": "DRIFT", "target": "#sobre", "range": [0.18, 0.4] },
+    { "code": "03", "label": "PARTICLE", "target": "#experiencia", "range": [0.4, 0.62] },
+    { "code": "04", "label": "HYBRID", "target": "#projetos", "range": [0.62, 0.82] },
+    { "code": "05", "label": "BIN", "target": "#contato", "range": [0.82, 1.0] }
+  ],
+  "hero": {
+    "name": "Jefté Martins",
+    "subtitle": "Software Engineer & .NET Full Stack Developer",
+    "pitch": "Building scalable C#/.NET systems and modern React & TypeScript interfaces — from data architecture to visual craft.",
+    "metadata": [
+      "Fortaleza, Brazil",
+      "English C2 Proficient",
+      "Full Stack & DevOps"
+    ],
+    "primaryCta": {
+      "label": "Explore background",
+      "href": "#sobre"
+    },
+    "secondaryCta": {
+      "label": "Download Resume",
+      "href": "./curriculo.pdf"
+    }
+  },
+  "about": {
+    "sectionTitle": "About & Experience",
+    "summary": "Full Stack Developer with a B.Sc. in Digital Systems and Media (UFC) and a Postgraduate Specialization in DevOps (UNOPAR), working end-to-end across high-volume back-end systems (.NET, C#, SQL Server, PostgreSQL), ETL pipelines, and modern front-end stacks (React, TypeScript, Vue/Quasar).",
+    "educationTitle": "Education & Certifications",
+    "education": [
+      {
+        "institution": "Federal University of Ceará (UFC)",
+        "credential": "B.Sc. in Digital Systems and Media"
+      },
+      {
+        "institution": "UNOPAR",
+        "credential": "Postgraduate Specialization in DevOps"
+      },
+      {
+        "institution": "EF SET English Certificate",
+        "credential": "75/100 — C2 Proficient"
+      }
+    ]
+  },
+  "experiences": [
+    {
+      "company": "OSF Digital",
+      "role": "Software Engineer",
+      "period": "May 2026 – Present",
+      "current": true,
+      "description": "Full Stack engineering for Hyatt Hotels using React, SharePoint CSOM, .NET, and PostgreSQL; refactoring reusable components, evolving microservices, and optimizing corporate portal integrations."
+    },
+    {
+      "company": "Quiver Soluções",
+      "role": "Full Stack Developer",
+      "period": "Mar 2024 – May 2026",
+      "current": false,
+      "description": "C# and ASP.NET Core back-end engineering in the insurance sector; designing and optimizing high-volume SQL Server/T-SQL ETL pipelines, structured Regex data extraction, and modernizing legacy .NET Framework systems."
+    },
+    {
+      "company": "Keepee Facilities",
+      "role": "Full Stack Developer",
+      "period": "Jul 2023 – Jan 2024",
+      "current": false,
+      "description": "Full stack SaaS product development with Vue.js (Quasar), .NET Core, and SQL Server; QA process oversight before deployments and direct technical mentoring of junior interns."
+    },
+    {
+      "company": "Instituto Atlântico",
+      "role": "Systems Analyst",
+      "period": "Jun 2022 – Feb 2023",
+      "current": false,
+      "description": "International project for Dell Technologies collaborating in English with teams across the USA and India; built reusable React + TypeScript component libraries and custom Web Parts for SharePoint SPFx."
+    },
+    {
+      "company": "TACTIUM BRASIL",
+      "role": ".NET Developer",
+      "period": "Aug 2021 – May 2022",
+      "current": false,
+      "description": "Full stack development with C#/.NET Framework, REST APIs, Razor/HTML/CSS/JS, Bootstrap, and SQL Server stored procedures."
+    }
+  ],
+  "stackSection": {
+    "sectionTitle": "Stack & Selected Projects",
+    "categories": [
+      {
+        "name": "Back-end",
+        "items": ["C#", ".NET Core", "ASP.NET Core", ".NET Framework", "Web API", "Entity Framework", "Node.js", "REST"]
+      },
+      {
+        "name": "Front-end",
+        "items": ["React", "TypeScript", "Next.js", "Vue / Quasar", "SharePoint SPFx / CSOM", "HTML5/CSS3"]
+      },
+      {
+        "name": "Data & DevOps",
+        "items": ["SQL Server (T-SQL, ETL, Procedures)", "PostgreSQL", "MongoDB", "Docker", "CI/CD", "Azure DevOps", "Git"]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "motor-ascii-binario",
+      "index": "01",
+      "title": "ASCII / Binary Visual Deconstruction Engine",
+      "scopeTag": "Open Source · Live",
+      "visibility": "public",
+      "stackSummary": "TypeScript · Canvas 2D · Zero Dependencies · 60 FPS",
+      "summary": "Standalone TypeScript library running live in the background of this portfolio: progressively transforms live video or images across 5 continuous stages (RAW, Drift, Particle, Hybrid, and Binary) at 60 FPS.",
+      "context": "Open-source on GitHub and executing live behind this page — try any local image via Alt + I.",
+      "imageSrc": "./assets/project-ascii-engine.jpg",
+      "imageAlt": "5-panel showcase of the visual deconstruction engine stages: 01 RAW, 02 DRIFT, 03 PARTICLE, 04 HYBRID, and 05 BINARY",
+      "architectureFlow": ["A/B Video (0.5s)", "Offscreen Sample", "Uint32Array Stamps", "5 Stages"],
+      "challenge": "Render thousands of glyphs per frame synchronized to continuous scroll and scene motion without frame drops, garbage-collection spikes, or compromising editorial legibility.",
+      "decisions": [
+        "Offscreen downsampling proportional to the active stage cell size, dramatically cutting pixel readback overhead per frame.",
+        "Reusable Uint32Array framebuffer with a sparse pre-rendered glyph stamp cache and typed particle pool, eliminating per-frame fillText calls and allocations.",
+        "Packaged as a zero-dependency ESM library with TypeScript definitions (.d.ts), procedural fallback, and an interactive demo."
+      ],
+      "technologies": ["TypeScript", "HTML5 Canvas 2D", "Vite", "Image Processing", "Web Performance (60 FPS)"],
+      "repoUrl": "https://github.com/JefteMartins/ascii-deconstructor",
+      "repoLabel": "View on GitHub",
+      "interactiveAction": "image-picker"
+    },
+    {
+      "id": "organizador-de-aulas",
+      "index": "02",
+      "title": "HorarioProfs — School Schedule Organizer",
+      "scopeTag": "Private Repository",
+      "visibility": "private",
+      "stackSummary": "React 19 · Electron · Tailwind v4 · PDF / CSV",
+      "summary": "Web and desktop application for building school timetables across multiple teachers, classes, and availability constraints — eliminating scheduling conflicts and minimizing teacher gaps.",
+      "context": "Private repository — get in touch if you would like to learn more about this project or see a live walkthrough.",
+      "imageSrc": "./assets/project-organizador-aulas.png",
+      "imageAlt": "HorarioProfs interface displaying an automated conflict-free class schedule with PDF export",
+      "architectureFlow": ["School Setup", "Rules & Constraints", "Assisted & Manual Grid", "Diagnostics & PDF"],
+      "challenge": "Building school timetables manually across dozens of classes, subjects, and individual teacher availability windows takes days for coordinators and often introduces clashes and idle gaps.",
+      "decisions": [
+        "Unified management of teachers, classes, curricula, and availability windows in a guided flow with continuous conflict validation.",
+        "Combines assisted timetable generation with direct slot-swap manual editing, per-teacher views, saved schedule versions, and a diagnostics panel.",
+        "Dual delivery (web and Electron desktop app) with local persistence, CSV import/export, and landscape-ready PDF printing."
+      ],
+      "technologies": ["React 19", "Electron", "Vite", "Tailwind CSS v4", "HTML2PDF", "CSV / LocalStorage"],
+      "contactCtaLabel": "Get in touch"
+    },
+    {
+      "id": "good-hamburguer",
+      "index": "03",
+      "title": "GoodHamburguer — .NET API & Blazor Operations",
+      "scopeTag": "Open Source · Full Stack .NET",
+      "visibility": "public",
+      "stackSummary": ".NET 10 · C# · Blazor Server · MySQL · Docker · Testcontainers",
+      "summary": "Full-stack order and menu management system built with Clean Architecture + DDD, featuring a versioned REST API (/api/v1), Blazor Server operations UI, observability, Docker Compose, and real MySQL integration tests.",
+      "context": "Public repository with a reproducible Docker Compose setup and automated GitHub Actions CI pipeline.",
+      "imageSrc": "./assets/project-goodhamburguer.png",
+      "imageAlt": "GoodHamburguer operational dashboard in Blazor Server connected to the v1 REST API",
+      "architectureFlow": ["Blazor Server", "REST API /api/v1", "Domain & Pricing", "EF Core + MySQL"],
+      "challenge": "Architect an end-to-end .NET application ready for technical review — combining isolated domain rules, real relational persistence, queryable operational logs, and a 100% reproducible environment.",
+      "decisions": [
+        "Pragmatic Clean Architecture + DDD separating Domain, Application, Infrastructure (EF Core + MySQL), versioned HTTP contracts with ProblemDetails, and a Blazor Server frontend.",
+        "Database-backed operational logging middleware, liveness/readiness health checks, Serilog, and OpenTelemetry for end-to-end observability.",
+        "Orchestrated Docker Compose stack (MySQL, migrations/seed, API, and Blazor) backed by unit tests, Testcontainers MySQL integration tests, and Blazor UI tests."
+      ],
+      "technologies": [".NET 10", "C#", "ASP.NET Core", "Blazor Server", "EF Core", "MySQL", "Docker", "xUnit", "Testcontainers", "OpenTelemetry"],
+      "repoUrl": "https://github.com/JefteMartins/GoodHamburguer",
+      "repoLabel": "View on GitHub"
+    }
+  ],
+  "contact": {
+    "sectionTitle": "Contact",
+    "lead": "Channels to connect and exchange ideas on .NET architecture, projects, and software engineering.",
+    "email": "jefte.martins@hotmail.com",
+    "copyLabel": "Copy email",
+    "copiedLabel": "Copied",
+    "links": [
+      {
+        "label": "LinkedIn",
+        "handle": "/in/jeftemartins",
+        "url": "https://www.linkedin.com/in/jeftemartins"
+      },
+      {
+        "label": "GitHub",
+        "handle": "/JefteMartins",
+        "url": "https://github.com/JefteMartins"
+      }
+    ]
+  }
+}

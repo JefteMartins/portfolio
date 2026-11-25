@@ -1,19 +1,131 @@
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import './style.css';
-import rawPortfolio from './data/portfolio.json';
+import rawPortfolioPt from './data/portfolio.json';
+import rawPortfolioEn from './data/portfolio.en.json';
 import type { PortfolioData, ProjectItem } from './types';
 import { AsciiDeconstructor } from './engine/asciiDeconstructor';
 
-const data = rawPortfolio as PortfolioData;
+type Locale = 'pt' | 'en';
+
+const PORTFOLIOS: Record<Locale, PortfolioData> = {
+  pt: rawPortfolioPt as PortfolioData,
+  en: rawPortfolioEn as PortfolioData
+};
+
+const UI_STRINGS: Record<
+  Locale,
+  {
+    htmlLang: string;
+    navAria: string;
+    langAria: string;
+    currentBadge: string;
+    timelineHeading: string;
+    stackAria: string;
+    projectsHeading: string;
+    directEmail: string;
+    openExternal: string;
+    heroEngineHintLead: string;
+    heroEngineHintBtn: string;
+    modalCloseAria: string;
+    modalProjectPrefix: string;
+    modalFlowTitle: string;
+    modalChallengeTitle: string;
+    modalDecisionsTitle: string;
+    modalTryImage: string;
+    modalContactDefault: string;
+    modalRepoDefault: string;
+    telemetryAria: string;
+    resetMediaLabel: string;
+    resetMediaTitle: string;
+    pickerTitle: string;
+    pickerAria: string;
+    pickerLabel: string;
+    dropTitle: string;
+    dropSubtitle: string;
+  }
+> = {
+  pt: {
+    htmlLang: 'pt-BR',
+    navAria: 'Navegação principal',
+    langAria: 'Selecionar idioma',
+    currentBadge: '● Em curso',
+    timelineHeading: 'Trajetória Profissional',
+    stackAria: 'Tecnologias por categoria',
+    projectsHeading: 'Projetos em Destaque',
+    directEmail: 'E-mail direto',
+    openExternal: 'Abrir',
+    heroEngineHintLead: 'Motor visual ao vivo no fundo — role para desconstruir ou',
+    heroEngineHintBtn: 'testar com sua imagem (Alt+I)',
+    modalCloseAria: 'Fechar detalhes do projeto',
+    modalProjectPrefix: 'Projeto',
+    modalFlowTitle: 'Fluxo Arquitetural',
+    modalChallengeTitle: 'Desafio Técnico',
+    modalDecisionsTitle: 'Decisões de Engenharia',
+    modalTryImage: 'Testar imagem (Alt+I)',
+    modalContactDefault: 'Entrar em contato',
+    modalRepoDefault: 'Ver repositório no GitHub',
+    telemetryAria: 'Telemetria de renderização e navegação de estágios',
+    resetMediaLabel: 'Restaurar',
+    resetMediaTitle: 'Restaurar mídia original',
+    pickerTitle: 'Testar imagem local nos 5 estágios (Alt + I ou Shift + Arrastar)',
+    pickerAria: 'Testar imagem local no motor de fundo (atalho Alt + I)',
+    pickerLabel: 'Testar imagem · Alt+I',
+    dropTitle: 'Modo de teste de imagem',
+    dropSubtitle: 'Solte a imagem para testar a desconstrução em tempo real nos 5 estágios'
+  },
+  en: {
+    htmlLang: 'en',
+    navAria: 'Main navigation',
+    langAria: 'Select language',
+    currentBadge: '● Current',
+    timelineHeading: 'Professional Experience',
+    stackAria: 'Technologies by category',
+    projectsHeading: 'Featured Projects',
+    directEmail: 'Direct email',
+    openExternal: 'Open',
+    heroEngineHintLead: 'Live visual engine in the background — scroll to deconstruct or',
+    heroEngineHintBtn: 'test with your image (Alt+I)',
+    modalCloseAria: 'Close project details',
+    modalProjectPrefix: 'Project',
+    modalFlowTitle: 'Architecture Flow',
+    modalChallengeTitle: 'Technical Challenge',
+    modalDecisionsTitle: 'Engineering Decisions',
+    modalTryImage: 'Try image (Alt+I)',
+    modalContactDefault: 'Get in touch',
+    modalRepoDefault: 'View on GitHub',
+    telemetryAria: 'Render telemetry and stage navigation',
+    resetMediaLabel: 'Reset',
+    resetMediaTitle: 'Restore default media',
+    pickerTitle: 'Test a local image across all 5 stages (Alt + I or Shift + Drag)',
+    pickerAria: 'Test a local image on the background engine (shortcut Alt + I)',
+    pickerLabel: 'Try image · Alt+I',
+    dropTitle: 'Image test mode',
+    dropSubtitle: 'Drop an image to test real-time deconstruction across all 5 stages'
+  }
+};
 
 // Suporte opcional a ?finish=none|light|medium para inspeção das doses de acabamento (Parada 4)
-const finishParam = new URLSearchParams(window.location.search).get('finish');
+const initialParams = new URLSearchParams(window.location.search);
+const finishParam = initialParams.get('finish');
 if (finishParam === 'none' || finishParam === 'light' || finishParam === 'medium') {
   document.documentElement.setAttribute('data-finish', finishParam);
 }
 
-document.title = data.meta.title;
+function resolveInitialLocale(): Locale {
+  const param = initialParams.get('lang')?.toLowerCase();
+  if (param === 'en' || param === 'pt') return param;
+  try {
+    const saved = window.localStorage.getItem('portfolio_lang');
+    if (saved === 'en' || saved === 'pt') return saved;
+  } catch {
+    // ignore storage errors
+  }
+  return 'pt';
+}
+
+let currentLocale: Locale = resolveInitialLocale();
+let data: PortfolioData = PORTFOLIOS[currentLocale];
 
 // SVGs próprios minimalistas (grade 16x16, stroke 1.5px, currentColor)
 const ICONS = {
@@ -34,9 +146,171 @@ function escapeHtml(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
+// Referências persistentes fora do #app
+const canvasEl = document.getElementById('bg-canvas') as HTMLCanvasElement;
+const pickerInput = document.getElementById('image-picker') as HTMLInputElement;
+const dropOverlay = document.getElementById('drop-overlay') as HTMLElement;
+
+// Referências dinâmicas dentro do #app (atualizadas a cada renderApp)
+let progressFillEl!: HTMLElement;
+let progressReadoutEl!: HTMLElement;
+let stageButtons: HTMLButtonElement[] = [];
+let pickerTrigger!: HTMLButtonElement;
+let resetMediaBtn!: HTMLButtonElement;
+let modalBackdrop!: HTMLElement;
+let modalCloseBtn!: HTMLButtonElement;
+let modalIndex!: HTMLElement;
+let modalScope!: HTMLElement;
+let modalTitle!: HTMLElement;
+let modalFlow!: HTMLElement;
+let modalChallenge!: HTMLElement;
+let modalDecisions!: HTMLElement;
+let modalTech!: HTMLElement;
+let modalContext!: HTMLElement;
+let modalPreviewWrap!: HTMLElement;
+let modalPreviewImg!: HTMLImageElement;
+let modalTryImageBtn!: HTMLButtonElement;
+let modalRepoLink!: HTMLAnchorElement;
+let modalRepoLabel!: HTMLElement;
+let modalContactLink!: HTMLAnchorElement;
+let modalContactLabel!: HTMLElement;
+
+let lastStageIndex = -1;
+let lastProgress = 0;
+let lastIsCustomMedia = false;
+let copyTimer = 0;
+let lastFocusedTrigger: HTMLElement | null = null;
+let engine: AsciiDeconstructor | null = null;
+
+function openImagePicker(): void {
+  pickerInput.value = '';
+  pickerInput.click();
+}
+
+function closeProjectModal(): void {
+  if (!modalBackdrop || modalBackdrop.hidden) return;
+  modalBackdrop.hidden = true;
+  document.body.style.overflow = '';
+  if (lastFocusedTrigger) {
+    lastFocusedTrigger.focus();
+    lastFocusedTrigger = null;
+  }
+}
+
+function openProjectModal(proj: ProjectItem, trigger: HTMLElement): void {
+  const ui = UI_STRINGS[currentLocale];
+  lastFocusedTrigger = trigger;
+  modalIndex.textContent = `${ui.modalProjectPrefix} ${proj.index}`;
+  modalScope.textContent = proj.scopeTag;
+  modalTitle.textContent = proj.title;
+
+  if (proj.imageSrc) {
+    modalPreviewImg.src = proj.imageSrc;
+    modalPreviewImg.alt = proj.imageAlt ?? proj.title;
+    modalPreviewWrap.hidden = false;
+  } else {
+    modalPreviewWrap.hidden = true;
+    modalPreviewImg.removeAttribute('src');
+    modalPreviewImg.alt = '';
+  }
+
+  modalFlow.innerHTML = proj.architectureFlow
+    .map(
+      (step, idx) =>
+        `<li class="modal-flow__step"><span class="modal-flow__node">${escapeHtml(step)}</span>${idx < proj.architectureFlow.length - 1 ? `<span class="modal-flow__sep" aria-hidden="true">${ICONS.arrowRight}</span>` : ''}</li>`
+    )
+    .join('');
+  modalChallenge.textContent = proj.challenge;
+  modalDecisions.innerHTML = proj.decisions
+    .map((d) => `<li>${escapeHtml(d)}</li>`)
+    .join('');
+  modalTech.textContent = proj.technologies.join(' · ');
+  modalContext.textContent = proj.context;
+  modalTryImageBtn.hidden = proj.interactiveAction !== 'image-picker';
+
+  const isPrivate = proj.visibility === 'private' || !proj.repoUrl;
+  if (isPrivate) {
+    modalRepoLink.hidden = true;
+    modalRepoLink.removeAttribute('href');
+    modalContactLink.hidden = false;
+    modalContactLabel.textContent = proj.contactCtaLabel ?? ui.modalContactDefault;
+  } else {
+    modalRepoLink.hidden = false;
+    modalRepoLink.href = proj.repoUrl!;
+    modalRepoLabel.textContent = proj.repoLabel ?? ui.modalRepoDefault;
+    modalContactLink.hidden = true;
+  }
+
+  modalBackdrop.hidden = false;
+  document.body.style.overflow = 'hidden';
+  modalCloseBtn.focus();
+}
+
+function syncDocumentMetadata(): void {
+  const ui = UI_STRINGS[currentLocale];
+  document.documentElement.lang = ui.htmlLang;
+  document.title = data.meta.title;
+  const metaDesc = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.content = data.meta.description;
+  }
+
+  const dropTitle = dropOverlay.querySelector('.mono-label');
+  const dropP = dropOverlay.querySelector('p');
+  if (dropTitle) dropTitle.textContent = ui.dropTitle;
+  if (dropP) dropP.textContent = ui.dropSubtitle;
+}
+
+function setLocale(next: Locale): void {
+  if (next === currentLocale) return;
+  currentLocale = next;
+  data = PORTFOLIOS[next];
+
+  try {
+    window.localStorage.setItem('portfolio_lang', next);
+  } catch {
+    // ignore storage errors
+  }
+
+  const url = new URL(window.location.href);
+  if (next === 'en') {
+    url.searchParams.set('lang', 'en');
+  } else {
+    url.searchParams.delete('lang');
+  }
+  window.history.replaceState({}, '', url.toString());
+
+  closeProjectModal();
+  renderApp();
+  syncTelemetryDom();
+  updateScrollProgress();
+}
+
+function syncTelemetryDom(): void {
+  if (!progressFillEl || !progressReadoutEl) return;
+  const pct = (lastProgress * 100).toFixed(2);
+  progressFillEl.style.width = `${pct}%`;
+  progressReadoutEl.textContent = `Scroll ${Math.round(lastProgress * 100)}%`;
+
+  const activeIdx = lastStageIndex >= 0 ? lastStageIndex : 0;
+  stageButtons.forEach((btn, idx) => {
+    btn.setAttribute('aria-current', idx === activeIdx ? 'true' : 'false');
+  });
+
+  if (pickerTrigger) {
+    pickerTrigger.setAttribute('data-custom', lastIsCustomMedia ? 'true' : 'false');
+  }
+  if (resetMediaBtn) {
+    resetMediaBtn.hidden = !lastIsCustomMedia;
+  }
+}
+
 function renderApp(): void {
   const app = document.getElementById('app');
   if (!app) return;
+  const ui = UI_STRINGS[currentLocale];
+
+  syncDocumentMetadata();
 
   const navLinksHtml = data.navigation.links
     .map(
@@ -63,7 +337,7 @@ function renderApp(): void {
             <h3 class="timeline-company">${escapeHtml(exp.company)}</h3>
             <span class="timeline-sep" aria-hidden="true">—</span>
             <span class="timeline-role">${escapeHtml(exp.role)}</span>
-            ${exp.current ? `<span class="timeline-current">● Em curso</span>` : ''}
+            ${exp.current ? `<span class="timeline-current">${escapeHtml(ui.currentBadge)}</span>` : ''}
           </div>
           <p class="timeline-desc">${escapeHtml(exp.description)}</p>
         </div>
@@ -160,7 +434,7 @@ function renderApp(): void {
           <span class="contact-row__kind">${escapeHtml(link.label)}</span>
           <span class="contact-row__value">${escapeHtml(link.handle)}</span>
         </span>
-        <span class="contact-row__status">Abrir ${ICONS.external}</span>
+        <span class="contact-row__status">${escapeHtml(ui.openExternal)} ${ICONS.external}</span>
       </a>
     `
     )
@@ -188,10 +462,14 @@ function renderApp(): void {
     <header class="site-header floating-glass">
       <div class="site-header__inner">
         <a class="brand-link" href="#hero">${escapeHtml(data.navigation.brand)}</a>
-        <nav class="site-nav" aria-label="Navegação principal">
+        <nav class="site-nav" aria-label="${escapeHtml(ui.navAria)}">
           <ul class="site-nav__links">
             ${navLinksHtml}
           </ul>
+          <div class="lang-switch" role="group" aria-label="${escapeHtml(ui.langAria)}">
+            <button type="button" class="lang-switch__btn" data-lang="pt" aria-pressed="${currentLocale === 'pt' ? 'true' : 'false'}">PT</button>
+            <button type="button" class="lang-switch__btn" data-lang="en" aria-pressed="${currentLocale === 'en' ? 'true' : 'false'}">EN</button>
+          </div>
           <a
             class="resume-btn"
             href="${escapeHtml(data.meta.resumeUrl)}"
@@ -229,9 +507,9 @@ function renderApp(): void {
             </a>
           </div>
           <p class="hero-engine-hint">
-            <span>Motor visual ao vivo no fundo — role para desconstruir ou</span>
+            <span>${escapeHtml(ui.heroEngineHintLead)}</span>
             <button type="button" id="hero-try-image-btn" class="hero-engine-hint__btn">
-              testar com sua imagem (Alt+I)
+              ${escapeHtml(ui.heroEngineHintBtn)}
             </button>
           </p>
         </section>
@@ -246,7 +524,7 @@ function renderApp(): void {
 
           <div id="experiencia">
             <div class="timeline-heading timeline-heading--split">
-              <span class="mono-label">Trajetória Profissional</span>
+              <span class="mono-label">${escapeHtml(ui.timelineHeading)}</span>
               <span class="mono-label">03 · PARTICLE</span>
             </div>
             <ol class="timeline-list">
@@ -269,12 +547,12 @@ function renderApp(): void {
             <span class="mono-label">04 · HYBRID</span>
           </div>
 
-          <div class="stack-matrix" aria-label="Tecnologias por categoria">
+          <div class="stack-matrix" aria-label="${escapeHtml(ui.stackAria)}">
             ${stackHtml}
           </div>
 
           <div class="projects-subhead">
-            <span class="mono-label">Projetos em Destaque</span>
+            <span class="mono-label">${escapeHtml(ui.projectsHeading)}</span>
           </div>
           <div class="projects-list">
             ${projectsHtml}
@@ -292,7 +570,7 @@ function renderApp(): void {
           <div class="contact-links">
             <button type="button" id="copy-email-btn" class="contact-row">
               <span class="contact-row__main">
-                <span class="contact-row__kind">E-mail direto</span>
+                <span class="contact-row__kind">${escapeHtml(ui.directEmail)}</span>
                 <span class="contact-row__value">${escapeHtml(data.contact.email)}</span>
               </span>
               <span id="copy-email-status" class="contact-row__status" data-copied="false">
@@ -318,7 +596,7 @@ function renderApp(): void {
             </div>
             <h3 id="modal-title" class="modal-title"></h3>
           </div>
-          <button type="button" id="modal-close-btn" class="modal-close" aria-label="Fechar detalhes do projeto">
+          <button type="button" id="modal-close-btn" class="modal-close" aria-label="${escapeHtml(ui.modalCloseAria)}">
             ${ICONS.close}
           </button>
         </div>
@@ -328,17 +606,17 @@ function renderApp(): void {
         </figure>
 
         <div class="modal-section">
-          <h4>Fluxo Arquitetural</h4>
+          <h4>${escapeHtml(ui.modalFlowTitle)}</h4>
           <ol id="modal-flow" class="modal-flow"></ol>
         </div>
 
         <div class="modal-section">
-          <h4>Desafio Técnico</h4>
+          <h4>${escapeHtml(ui.modalChallengeTitle)}</h4>
           <p id="modal-challenge"></p>
         </div>
 
         <div class="modal-section">
-          <h4>Decisões de Engenharia</h4>
+          <h4>${escapeHtml(ui.modalDecisionsTitle)}</h4>
           <ul id="modal-decisions" class="modal-decisions"></ul>
         </div>
 
@@ -349,14 +627,14 @@ function renderApp(): void {
           <div class="modal-footer__actions">
             <button type="button" id="modal-try-image-btn" class="resume-btn" hidden>
               ${ICONS.imageTest}
-              <span>Testar imagem (Alt+I)</span>
+              <span>${escapeHtml(ui.modalTryImage)}</span>
             </button>
             <a id="modal-repo-link" class="resume-btn" href="#" target="_blank" rel="noopener noreferrer">
               <span id="modal-repo-label"></span>
               ${ICONS.external}
             </a>
             <a id="modal-contact-link" class="resume-btn" href="#contato" hidden>
-              <span id="modal-contact-label">Entrar em contato</span>
+              <span id="modal-contact-label">${escapeHtml(ui.modalContactDefault)}</span>
               ${ICONS.arrowDown}
             </a>
           </div>
@@ -365,7 +643,7 @@ function renderApp(): void {
     </div>
 
     <!-- Barra de Telemetria Fixa -->
-    <aside class="telemetry-bar floating-glass" aria-label="Telemetria de renderização e navegação de estágios">
+    <aside class="telemetry-bar floating-glass" aria-label="${escapeHtml(ui.telemetryAria)}">
       <div class="telemetry-bar__inner">
         <div class="telemetry-stages">
           ${telemetryButtonsHtml}
@@ -379,42 +657,164 @@ function renderApp(): void {
         </div>
 
         <div class="telemetry-tools">
-          <button type="button" id="reset-media-btn" class="reset-media-btn" hidden title="Restaurar mídia original das carpas">
-            Restaurar
+          <button type="button" id="reset-media-btn" class="reset-media-btn" hidden title="${escapeHtml(ui.resetMediaTitle)}">
+            ${escapeHtml(ui.resetMediaLabel)}
           </button>
           <button
             type="button"
             id="img-picker-trigger"
             class="img-picker-btn"
             data-custom="false"
-            title="Testar imagem local nos 5 estágios (Alt + I ou Shift + Arrastar)"
-            aria-label="Testar imagem local no motor de fundo (atalho Alt + I)"
+            title="${escapeHtml(ui.pickerTitle)}"
+            aria-label="${escapeHtml(ui.pickerAria)}"
           >
             ${ICONS.imageTest}
-            <span class="img-picker-btn__label">Testar imagem · Alt+I</span>
+            <span class="img-picker-btn__label">${escapeHtml(ui.pickerLabel)}</span>
           </button>
         </div>
       </div>
     </aside>
   `;
+
+  bindAppEvents();
 }
 
+function bindAppEvents(): void {
+  progressFillEl = document.getElementById('telemetry-fill') as HTMLElement;
+  progressReadoutEl = document.getElementById('telemetry-readout') as HTMLElement;
+  stageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-btn'));
+  pickerTrigger = document.getElementById('img-picker-trigger') as HTMLButtonElement;
+  resetMediaBtn = document.getElementById('reset-media-btn') as HTMLButtonElement;
+
+  modalBackdrop = document.getElementById('project-modal') as HTMLElement;
+  modalCloseBtn = document.getElementById('modal-close-btn') as HTMLButtonElement;
+  modalIndex = document.getElementById('modal-index') as HTMLElement;
+  modalScope = document.getElementById('modal-scope') as HTMLElement;
+  modalTitle = document.getElementById('modal-title') as HTMLElement;
+  modalFlow = document.getElementById('modal-flow') as HTMLElement;
+  modalChallenge = document.getElementById('modal-challenge') as HTMLElement;
+  modalDecisions = document.getElementById('modal-decisions') as HTMLElement;
+  modalTech = document.getElementById('modal-tech') as HTMLElement;
+  modalContext = document.getElementById('modal-context') as HTMLElement;
+  modalPreviewWrap = document.getElementById('modal-preview-wrap') as HTMLElement;
+  modalPreviewImg = document.getElementById('modal-preview-img') as HTMLImageElement;
+  modalTryImageBtn = document.getElementById('modal-try-image-btn') as HTMLButtonElement;
+  modalRepoLink = document.getElementById('modal-repo-link') as HTMLAnchorElement;
+  modalRepoLabel = document.getElementById('modal-repo-label') as HTMLElement;
+  modalContactLink = document.getElementById('modal-contact-link') as HTMLAnchorElement;
+  modalContactLabel = document.getElementById('modal-contact-label') as HTMLElement;
+
+  // Seletor de idioma PT / EN
+  document.querySelectorAll<HTMLButtonElement>('.lang-switch__btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      if (lang === 'pt' || lang === 'en') {
+        setLocale(lang);
+      }
+    });
+  });
+
+  // Clique nos estágios da barra de telemetria
+  stageButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selector = btn.dataset.target;
+      if (!selector) return;
+      if (selector === '#contato') {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+        return;
+      }
+      const targetEl = document.querySelector(selector);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  const heroTryImageBtn = document.getElementById('hero-try-image-btn') as HTMLButtonElement;
+  pickerTrigger.addEventListener('click', openImagePicker);
+  heroTryImageBtn.addEventListener('click', openImagePicker);
+
+  resetMediaBtn.addEventListener('click', () => {
+    engine?.resetToDefaultMedia();
+  });
+
+  // Copiar e-mail
+  const copyEmailBtn = document.getElementById('copy-email-btn') as HTMLButtonElement;
+  const copyEmailStatus = document.getElementById('copy-email-status') as HTMLElement;
+  copyEmailBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(data.contact.email);
+    } catch {
+      const temp = document.createElement('textarea');
+      temp.value = data.contact.email;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      temp.remove();
+    }
+
+    window.clearTimeout(copyTimer);
+    copyEmailStatus.setAttribute('data-copied', 'true');
+    copyEmailStatus.innerHTML = `<span>${escapeHtml(data.contact.copiedLabel)}</span>${ICONS.check}`;
+
+    copyTimer = window.setTimeout(() => {
+      copyEmailStatus.setAttribute('data-copied', 'false');
+      copyEmailStatus.innerHTML = `<span>${escapeHtml(data.contact.copyLabel)}</span>${ICONS.copy}`;
+    }, 2400);
+  });
+
+  // Modal de projetos
+  document.querySelectorAll<HTMLButtonElement>('.project-item').forEach((card) => {
+    card.addEventListener('click', () => {
+      const proj = data.projects.find((p) => p.id === card.dataset.projectId);
+      if (proj) {
+        openProjectModal(proj, card);
+      }
+    });
+  });
+
+  modalTryImageBtn.addEventListener('click', () => {
+    closeProjectModal();
+    openImagePicker();
+  });
+
+  modalContactLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeProjectModal();
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth'
+    });
+  });
+
+  modalCloseBtn.addEventListener('click', closeProjectModal);
+
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) {
+      closeProjectModal();
+    }
+  });
+}
+
+function updateScrollProgress(): void {
+  const maxScroll = Math.max(
+    document.documentElement.scrollHeight - window.innerHeight,
+    1
+  );
+  const p = window.scrollY / maxScroll;
+  engine?.setScrollProgress(p);
+}
+
+// Render inicial e inicialização única do motor + listeners globais
 renderApp();
 
-// Inicializa o motor de desconstrução
-const canvasEl = document.getElementById('bg-canvas') as HTMLCanvasElement;
-const progressFillEl = document.getElementById('telemetry-fill') as HTMLElement;
-const progressReadoutEl = document.getElementById('telemetry-readout') as HTMLElement;
-const stageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-btn'));
-const pickerInput = document.getElementById('image-picker') as HTMLInputElement;
-const pickerTrigger = document.getElementById('img-picker-trigger') as HTMLButtonElement;
-const heroTryImageBtn = document.getElementById('hero-try-image-btn') as HTMLButtonElement;
-const resetMediaBtn = document.getElementById('reset-media-btn') as HTMLButtonElement;
-const dropOverlay = document.getElementById('drop-overlay') as HTMLElement;
+engine = new AsciiDeconstructor(canvasEl, data.background, (telemetry) => {
+  lastProgress = telemetry.progress;
+  lastIsCustomMedia = telemetry.isCustomMedia;
 
-let lastStageIndex = -1;
-
-const engine = new AsciiDeconstructor(canvasEl, data.background, (telemetry) => {
   const pct = (telemetry.progress * 100).toFixed(2);
   progressFillEl.style.width = `${pct}%`;
   progressReadoutEl.textContent = `Scroll ${Math.round(telemetry.progress * 100)}%`;
@@ -430,56 +830,15 @@ const engine = new AsciiDeconstructor(canvasEl, data.background, (telemetry) => 
   resetMediaBtn.hidden = !telemetry.isCustomMedia;
 });
 
-function updateScrollProgress(): void {
-  const maxScroll = Math.max(
-    document.documentElement.scrollHeight - window.innerHeight,
-    1
-  );
-  const p = window.scrollY / maxScroll;
-  engine.setScrollProgress(p);
-}
-
 window.addEventListener('scroll', updateScrollProgress, { passive: true });
 window.addEventListener('resize', updateScrollProgress, { passive: true });
 engine.start();
 updateScrollProgress();
 
-// Clique nos estágios da barra de telemetria faz scroll suave direto para a seção
-stageButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const selector = btn.dataset.target;
-    if (!selector) return;
-    if (selector === '#contato') {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth'
-      });
-      return;
-    }
-    const targetEl = document.querySelector(selector);
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-// Modo de Teste Rápido de Imagens: botão, Alt + I e Shift + Drag & Drop
-function openImagePicker(): void {
-  pickerInput.value = '';
-  pickerInput.click();
-}
-
-pickerTrigger.addEventListener('click', openImagePicker);
-heroTryImageBtn.addEventListener('click', openImagePicker);
-
-resetMediaBtn.addEventListener('click', () => {
-  engine.resetToDefaultMedia();
-});
-
 pickerInput.addEventListener('change', () => {
   const file = pickerInput.files?.[0];
   if (file && file.type.startsWith('image/')) {
-    engine.loadCustomFile(file);
+    engine?.loadCustomFile(file);
   }
 });
 
@@ -487,6 +846,8 @@ window.addEventListener('keydown', (e) => {
   if (e.altKey && (e.key === 'i' || e.key === 'I' || e.code === 'KeyI')) {
     e.preventDefault();
     openImagePicker();
+  } else if (e.key === 'Escape' && modalBackdrop && !modalBackdrop.hidden) {
+    closeProjectModal();
   }
 });
 
@@ -512,149 +873,6 @@ window.addEventListener('drop', (e) => {
   const file = e.dataTransfer?.files?.[0];
   if (file && file.type.startsWith('image/')) {
     e.preventDefault();
-    engine.loadCustomFile(file);
-  }
-});
-
-// Copiar e-mail com feedback imediato no próprio elemento
-const copyEmailBtn = document.getElementById('copy-email-btn') as HTMLButtonElement;
-const copyEmailStatus = document.getElementById('copy-email-status') as HTMLElement;
-let copyTimer = 0;
-
-copyEmailBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(data.contact.email);
-  } catch {
-    const temp = document.createElement('textarea');
-    temp.value = data.contact.email;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand('copy');
-    temp.remove();
-  }
-
-  window.clearTimeout(copyTimer);
-  copyEmailStatus.setAttribute('data-copied', 'true');
-  copyEmailStatus.innerHTML = `<span>${escapeHtml(data.contact.copiedLabel)}</span>${ICONS.check}`;
-
-  copyTimer = window.setTimeout(() => {
-    copyEmailStatus.setAttribute('data-copied', 'false');
-    copyEmailStatus.innerHTML = `<span>${escapeHtml(data.contact.copyLabel)}</span>${ICONS.copy}`;
-  }, 2400);
-});
-
-// Modal de Projetos (retorna o foco ao gatilho original ao fechar)
-const modalBackdrop = document.getElementById('project-modal') as HTMLElement;
-const modalCloseBtn = document.getElementById('modal-close-btn') as HTMLButtonElement;
-const modalIndex = document.getElementById('modal-index') as HTMLElement;
-const modalScope = document.getElementById('modal-scope') as HTMLElement;
-const modalTitle = document.getElementById('modal-title') as HTMLElement;
-const modalFlow = document.getElementById('modal-flow') as HTMLElement;
-const modalChallenge = document.getElementById('modal-challenge') as HTMLElement;
-const modalDecisions = document.getElementById('modal-decisions') as HTMLElement;
-const modalTech = document.getElementById('modal-tech') as HTMLElement;
-const modalContext = document.getElementById('modal-context') as HTMLElement;
-const modalPreviewWrap = document.getElementById('modal-preview-wrap') as HTMLElement;
-const modalPreviewImg = document.getElementById('modal-preview-img') as HTMLImageElement;
-const modalTryImageBtn = document.getElementById('modal-try-image-btn') as HTMLButtonElement;
-const modalRepoLink = document.getElementById('modal-repo-link') as HTMLAnchorElement;
-const modalRepoLabel = document.getElementById('modal-repo-label') as HTMLElement;
-const modalContactLink = document.getElementById('modal-contact-link') as HTMLAnchorElement;
-const modalContactLabel = document.getElementById('modal-contact-label') as HTMLElement;
-
-let lastFocusedTrigger: HTMLElement | null = null;
-
-function openProjectModal(proj: ProjectItem, trigger: HTMLElement): void {
-  lastFocusedTrigger = trigger;
-  modalIndex.textContent = `Projeto ${proj.index}`;
-  modalScope.textContent = proj.scopeTag;
-  modalTitle.textContent = proj.title;
-
-  if (proj.imageSrc) {
-    modalPreviewImg.src = proj.imageSrc;
-    modalPreviewImg.alt = proj.imageAlt ?? proj.title;
-    modalPreviewWrap.hidden = false;
-  } else {
-    modalPreviewWrap.hidden = true;
-    modalPreviewImg.removeAttribute('src');
-    modalPreviewImg.alt = '';
-  }
-
-  modalFlow.innerHTML = proj.architectureFlow
-    .map(
-      (step, idx) =>
-        `<li class="modal-flow__step"><span class="modal-flow__node">${escapeHtml(step)}</span>${idx < proj.architectureFlow.length - 1 ? `<span class="modal-flow__sep" aria-hidden="true">${ICONS.arrowRight}</span>` : ''}</li>`
-    )
-    .join('');
-  modalChallenge.textContent = proj.challenge;
-  modalDecisions.innerHTML = proj.decisions
-    .map((d) => `<li>${escapeHtml(d)}</li>`)
-    .join('');
-  modalTech.textContent = proj.technologies.join(' · ');
-  modalContext.textContent = proj.context;
-  modalTryImageBtn.hidden = proj.interactiveAction !== 'image-picker';
-
-  const isPrivate = proj.visibility === 'private' || !proj.repoUrl;
-  if (isPrivate) {
-    modalRepoLink.hidden = true;
-    modalRepoLink.removeAttribute('href');
-    modalContactLink.hidden = false;
-    modalContactLabel.textContent = proj.contactCtaLabel ?? 'Entrar em contato';
-  } else {
-    modalRepoLink.hidden = false;
-    modalRepoLink.href = proj.repoUrl!;
-    modalRepoLabel.textContent = proj.repoLabel ?? 'Ver repositório no GitHub';
-    modalContactLink.hidden = true;
-  }
-
-  modalBackdrop.hidden = false;
-  document.body.style.overflow = 'hidden';
-  modalCloseBtn.focus();
-}
-
-modalContactLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  closeProjectModal();
-  window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: 'smooth'
-  });
-});
-
-modalTryImageBtn.addEventListener('click', () => {
-  closeProjectModal();
-  openImagePicker();
-});
-
-function closeProjectModal(): void {
-  if (modalBackdrop.hidden) return;
-  modalBackdrop.hidden = true;
-  document.body.style.overflow = '';
-  if (lastFocusedTrigger) {
-    lastFocusedTrigger.focus();
-    lastFocusedTrigger = null;
-  }
-}
-
-document.querySelectorAll<HTMLButtonElement>('.project-item').forEach((card) => {
-  card.addEventListener('click', () => {
-    const proj = data.projects.find((p) => p.id === card.dataset.projectId);
-    if (proj) {
-      openProjectModal(proj, card);
-    }
-  });
-});
-
-modalCloseBtn.addEventListener('click', closeProjectModal);
-
-modalBackdrop.addEventListener('click', (e) => {
-  if (e.target === modalBackdrop) {
-    closeProjectModal();
-  }
-});
-
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !modalBackdrop.hidden) {
-    closeProjectModal();
+    engine?.loadCustomFile(file);
   }
 });
