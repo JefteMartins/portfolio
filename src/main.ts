@@ -116,10 +116,32 @@ function renderApp(): void {
             <span class="project-item__idx">${escapeHtml(proj.index)}</span>
             <h3 class="project-item__title">${escapeHtml(proj.title)}</h3>
           </div>
-          <span class="project-item__action">Arquitetura ${ICONS.arrowRight}</span>
+          <div class="project-item__meta-right">
+            <span
+              class="project-item__scope"
+              data-live="${proj.interactiveAction === 'image-picker' ? 'true' : 'false'}"
+              data-private="${proj.visibility === 'private' ? 'true' : 'false'}"
+            >${escapeHtml(proj.scopeTag)}</span>
+            <span class="project-item__arrow" aria-hidden="true">${ICONS.external}</span>
+          </div>
         </div>
         <div class="project-item__stack">${escapeHtml(proj.stackSummary)}</div>
-        <p class="project-item__summary">${escapeHtml(proj.summary)}</p>
+        <div class="project-item__body">
+          ${
+            proj.imageSrc
+              ? `<div class="project-item__thumb-wrap">
+                  <img
+                    class="project-item__thumb"
+                    src="${escapeHtml(proj.imageSrc)}"
+                    alt="${escapeHtml(proj.imageAlt ?? proj.title)}"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>`
+              : ''
+          }
+          <p class="project-item__summary">${escapeHtml(proj.summary)}</p>
+        </div>
       </button>
     `
     )
@@ -206,6 +228,12 @@ function renderApp(): void {
               ${ICONS.external}
             </a>
           </div>
+          <p class="hero-engine-hint">
+            <span>Motor visual ao vivo no fundo — role para desconstruir ou</span>
+            <button type="button" id="hero-try-image-btn" class="hero-engine-hint__btn">
+              testar com sua imagem (Alt+I)
+            </button>
+          </p>
         </section>
 
         <!-- Seção 2: Sobre & Experiência (DRIFT -> PARTICLE) -->
@@ -283,12 +311,25 @@ function renderApp(): void {
       <div class="modal-panel floating-glass">
         <div class="modal-top">
           <div>
-            <span id="modal-index" class="mono-label"></span>
+            <div class="modal-eyebrow">
+              <span id="modal-index" class="mono-label"></span>
+              <span class="hero-meta__sep" aria-hidden="true">·</span>
+              <span id="modal-scope" class="mono-label"></span>
+            </div>
             <h3 id="modal-title" class="modal-title"></h3>
           </div>
           <button type="button" id="modal-close-btn" class="modal-close" aria-label="Fechar detalhes do projeto">
             ${ICONS.close}
           </button>
+        </div>
+
+        <figure id="modal-preview-wrap" class="modal-preview" hidden>
+          <img id="modal-preview-img" class="modal-preview__img" src="" alt="" />
+        </figure>
+
+        <div class="modal-section">
+          <h4>Fluxo Arquitetural</h4>
+          <ol id="modal-flow" class="modal-flow"></ol>
         </div>
 
         <div class="modal-section">
@@ -305,10 +346,20 @@ function renderApp(): void {
 
         <div class="modal-footer">
           <span id="modal-context" class="modal-context-note"></span>
-          <a id="modal-repo-link" class="resume-btn" href="#" target="_blank" rel="noopener noreferrer">
-            <span id="modal-repo-label"></span>
-            ${ICONS.external}
-          </a>
+          <div class="modal-footer__actions">
+            <button type="button" id="modal-try-image-btn" class="resume-btn" hidden>
+              ${ICONS.imageTest}
+              <span>Testar imagem (Alt+I)</span>
+            </button>
+            <a id="modal-repo-link" class="resume-btn" href="#" target="_blank" rel="noopener noreferrer">
+              <span id="modal-repo-label"></span>
+              ${ICONS.external}
+            </a>
+            <a id="modal-contact-link" class="resume-btn" href="#contato" hidden>
+              <span id="modal-contact-label">Entrar em contato</span>
+              ${ICONS.arrowDown}
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -336,11 +387,11 @@ function renderApp(): void {
             id="img-picker-trigger"
             class="img-picker-btn"
             data-custom="false"
-            title="Testar imagem local nos 4 estágios (Alt + I ou Shift + Arrastar)"
+            title="Testar imagem local nos 5 estágios (Alt + I ou Shift + Arrastar)"
             aria-label="Testar imagem local no motor de fundo (atalho Alt + I)"
           >
             ${ICONS.imageTest}
-            <span class="img-picker-btn__label">Alt+I</span>
+            <span class="img-picker-btn__label">Testar imagem · Alt+I</span>
           </button>
         </div>
       </div>
@@ -357,6 +408,7 @@ const progressReadoutEl = document.getElementById('telemetry-readout') as HTMLEl
 const stageButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-btn'));
 const pickerInput = document.getElementById('image-picker') as HTMLInputElement;
 const pickerTrigger = document.getElementById('img-picker-trigger') as HTMLButtonElement;
+const heroTryImageBtn = document.getElementById('hero-try-image-btn') as HTMLButtonElement;
 const resetMediaBtn = document.getElementById('reset-media-btn') as HTMLButtonElement;
 const dropOverlay = document.getElementById('drop-overlay') as HTMLElement;
 
@@ -418,6 +470,7 @@ function openImagePicker(): void {
 }
 
 pickerTrigger.addEventListener('click', openImagePicker);
+heroTryImageBtn.addEventListener('click', openImagePicker);
 
 resetMediaBtn.addEventListener('click', () => {
   engine.resetToDefaultMedia();
@@ -494,33 +547,84 @@ copyEmailBtn.addEventListener('click', async () => {
 const modalBackdrop = document.getElementById('project-modal') as HTMLElement;
 const modalCloseBtn = document.getElementById('modal-close-btn') as HTMLButtonElement;
 const modalIndex = document.getElementById('modal-index') as HTMLElement;
+const modalScope = document.getElementById('modal-scope') as HTMLElement;
 const modalTitle = document.getElementById('modal-title') as HTMLElement;
+const modalFlow = document.getElementById('modal-flow') as HTMLElement;
 const modalChallenge = document.getElementById('modal-challenge') as HTMLElement;
 const modalDecisions = document.getElementById('modal-decisions') as HTMLElement;
 const modalTech = document.getElementById('modal-tech') as HTMLElement;
 const modalContext = document.getElementById('modal-context') as HTMLElement;
+const modalPreviewWrap = document.getElementById('modal-preview-wrap') as HTMLElement;
+const modalPreviewImg = document.getElementById('modal-preview-img') as HTMLImageElement;
+const modalTryImageBtn = document.getElementById('modal-try-image-btn') as HTMLButtonElement;
 const modalRepoLink = document.getElementById('modal-repo-link') as HTMLAnchorElement;
 const modalRepoLabel = document.getElementById('modal-repo-label') as HTMLElement;
+const modalContactLink = document.getElementById('modal-contact-link') as HTMLAnchorElement;
+const modalContactLabel = document.getElementById('modal-contact-label') as HTMLElement;
 
 let lastFocusedTrigger: HTMLElement | null = null;
 
 function openProjectModal(proj: ProjectItem, trigger: HTMLElement): void {
   lastFocusedTrigger = trigger;
   modalIndex.textContent = `Projeto ${proj.index}`;
+  modalScope.textContent = proj.scopeTag;
   modalTitle.textContent = proj.title;
+
+  if (proj.imageSrc) {
+    modalPreviewImg.src = proj.imageSrc;
+    modalPreviewImg.alt = proj.imageAlt ?? proj.title;
+    modalPreviewWrap.hidden = false;
+  } else {
+    modalPreviewWrap.hidden = true;
+    modalPreviewImg.removeAttribute('src');
+    modalPreviewImg.alt = '';
+  }
+
+  modalFlow.innerHTML = proj.architectureFlow
+    .map(
+      (step, idx) =>
+        `<li class="modal-flow__step"><span class="modal-flow__node">${escapeHtml(step)}</span>${idx < proj.architectureFlow.length - 1 ? `<span class="modal-flow__sep" aria-hidden="true">${ICONS.arrowRight}</span>` : ''}</li>`
+    )
+    .join('');
   modalChallenge.textContent = proj.challenge;
   modalDecisions.innerHTML = proj.decisions
     .map((d) => `<li>${escapeHtml(d)}</li>`)
     .join('');
   modalTech.textContent = proj.technologies.join(' · ');
   modalContext.textContent = proj.context;
-  modalRepoLink.href = proj.repoUrl;
-  modalRepoLabel.textContent = proj.repoLabel;
+  modalTryImageBtn.hidden = proj.interactiveAction !== 'image-picker';
+
+  const isPrivate = proj.visibility === 'private' || !proj.repoUrl;
+  if (isPrivate) {
+    modalRepoLink.hidden = true;
+    modalRepoLink.removeAttribute('href');
+    modalContactLink.hidden = false;
+    modalContactLabel.textContent = proj.contactCtaLabel ?? 'Entrar em contato';
+  } else {
+    modalRepoLink.hidden = false;
+    modalRepoLink.href = proj.repoUrl!;
+    modalRepoLabel.textContent = proj.repoLabel ?? 'Ver repositório no GitHub';
+    modalContactLink.hidden = true;
+  }
 
   modalBackdrop.hidden = false;
   document.body.style.overflow = 'hidden';
   modalCloseBtn.focus();
 }
+
+modalContactLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  closeProjectModal();
+  window.scrollTo({
+    top: document.documentElement.scrollHeight,
+    behavior: 'smooth'
+  });
+});
+
+modalTryImageBtn.addEventListener('click', () => {
+  closeProjectModal();
+  openImagePicker();
+});
 
 function closeProjectModal(): void {
   if (modalBackdrop.hidden) return;

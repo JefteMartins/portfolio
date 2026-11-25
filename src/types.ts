@@ -32,14 +32,21 @@ export interface ProjectItem {
   id: string;
   index: string;
   title: string;
+  scopeTag: string;
+  visibility?: 'public' | 'private';
   stackSummary: string;
   summary: string;
   context: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  architectureFlow: string[];
   challenge: string;
   decisions: string[];
   technologies: string[];
-  repoUrl: string;
-  repoLabel: string;
+  repoUrl?: string;
+  repoLabel?: string;
+  contactCtaLabel?: string;
+  interactiveAction?: 'image-picker';
 }
 
 export interface ContactLink {

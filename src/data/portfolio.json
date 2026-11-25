@@ -122,55 +122,70 @@
   },
   "projects": [
     {
-      "id": "etl-alta-volumetria",
-      "index": "01",
-      "title": "Pipeline ETL & Processamento de Alta Volumetria",
-      "stackSummary": ".NET · C# · SQL Server · T-SQL · Regex",
-      "summary": "Ingestão, higienização e conciliação em lote de documentos e apólices no setor de seguros com foco em previsibilidade de memória e throughput transacional.",
-      "context": "Arquitetura derivada de cenários reais de processamento crítico no mercado de seguros (dados sensíveis proprietários omitidos).",
-      "challenge": "Processar grandes lotes heterogêneos de dados semiestruturados sem bloquear tabelas transacionais nem degradar o tempo de resposta das APIs principais.",
-      "decisions": [
-        "Parsing determinístico em C# com expressões regulares compiladas e leitura em stream para reduzir alocações na Large Object Heap.",
-        "Carga em estágios (staging tables) com T-SQL orientado a conjuntos, índices filtrados e lotes controlados para evitar lock escalation no SQL Server.",
-        "Registro estruturado de falhas por lote para reprocessamento idempotente e rastreabilidade operacional."
-      ],
-      "technologies": ["C#", "ASP.NET Core", ".NET Framework", "SQL Server", "T-SQL", "Stored Procedures", "Regex"],
-      "repoUrl": "https://github.com/JefteMartins",
-      "repoLabel": "Ver perfil no GitHub"
-    },
-    {
-      "id": "biblioteca-spfx-enterprise",
-      "index": "02",
-      "title": "Biblioteca de Componentes Enterprise",
-      "stackSummary": "React · TypeScript · SharePoint SPFx / CSOM",
-      "summary": "Design system modular de web parts e controles reutilizáveis para portais corporativos globais, garantindo tipagem estrita e consistência entre múltiplos times.",
-      "context": "Padrão arquitetural aplicado em portais corporativos internacionais (Dell Technologies e ecossistema enterprise em inglês).",
-      "challenge": "Padronizar interfaces complexas dentro das restrições do ecossistema SharePoint mantendo isolamento de estilos, acessibilidade por teclado e contratos claros entre front-end e APIs.",
-      "decisions": [
-        "Contratos em TypeScript estrito desacoplando a camada visual em React dos adaptadores de dados SharePoint SPFx/CSOM e APIs REST.",
-        "Componentização orientada a composição para evitar duplicação de lógica de estado, filtros e estados vazios/erro entre portais.",
-        "Integração em esteiras CI/CD com validação estática para entregas coordenadas entre equipes distribuídas."
-      ],
-      "technologies": ["React", "TypeScript", "SharePoint SPFx", "CSOM", "REST APIs", "HTML5/CSS3", "Azure DevOps"],
-      "repoUrl": "https://github.com/JefteMartins",
-      "repoLabel": "Ver perfil no GitHub"
-    },
-    {
       "id": "motor-ascii-binario",
-      "index": "03",
+      "index": "01",
       "title": "Motor de Desconstrução Visual ASCII/Binário",
-      "stackSummary": "Canvas 2D · TypeScript · Amostragem em Tempo Real",
-      "summary": "Pipeline gráfico que executa neste próprio portfólio: converte vídeo e imagem ao vivo em 5 estágios progressivos (RAW, Drift com rastro de partículas, Particle, Hybrid e Binário) a 60 FPS.",
-      "context": "Código-fonte aberto e executando em tempo real no fundo desta página — teste agora pressionando Alt + I para carregar qualquer imagem local.",
-      "challenge": "Renderizar milhares de glifos por quadro sincronizados ao scroll contínuo e ao movimento da água sem quedas de taxa de quadros nem perda de contraste da tipografia editorial.",
+      "scopeTag": "Open Source · Live",
+      "visibility": "public",
+      "stackSummary": "TypeScript · Canvas 2D · Zero Dependências · 60 FPS",
+      "summary": "Biblioteca TypeScript que executa em tempo real neste portfólio: converte vídeo ou imagem ao vivo em 5 estágios progressivos (RAW, Drift, Particle, Hybrid e Binary) a 60 FPS — pronta para importar em qualquer projeto web.",
+      "context": "Código-fonte aberto no GitHub e rodando ao vivo no fundo desta página — teste com qualquer imagem local via Alt + I.",
+      "imageSrc": "/assets/project-ascii-engine.jpg",
+      "imageAlt": "Demonstração em 5 painéis dos estágios do motor gráfico: 01 RAW, 02 DRIFT, 03 PARTICLE, 04 HYBRID e 05 BINARY",
+      "architectureFlow": ["Vídeo A/B (0.5s)", "Sample Offscreen", "Uint32Array Stamps", "5 Estágios"],
+      "challenge": "Renderizar milhares de glifos por quadro sincronizados ao scroll contínuo e ao movimento da cena sem quedas de taxa de quadros, sem pressão de garbage collection e mantendo a legibilidade editorial.",
       "decisions": [
-        "Downsampling em buffer offscreen proporcional à célula do estágio (7px a 16px), reduzindo drasticamente a leitura de pixels por frame.",
-        "Rasterizador em Uint32Array com cache esparso de carimbos de glifos pré-renderizados, eliminando chamadas repetidas de fillText e alocações por quadro.",
-        "Limiar dinâmico por percentil de luminância no estágio Binário (0/1) para preservar a silhueta reconhecível em qualquer imagem enviada via Alt + I."
+        "Downsampling em buffer offscreen proporcional à célula do estágio, reduzindo drasticamente a leitura de pixels por frame.",
+        "Rasterizador em Uint32Array com cache esparso de carimbos de glifos pré-renderizados e pool tipado de partículas, eliminando fillText e alocações por quadro.",
+        "Empacotamento como biblioteca ESM zero-dependências com definições TypeScript (.d.ts), fallback procedural e demo interativa."
       ],
-      "technologies": ["TypeScript", "HTML5 Canvas", "Vite", "Processamento de Imagem", "Web Performance (60 FPS)"],
-      "repoUrl": "https://github.com/JefteMartins",
-      "repoLabel": "Ver perfil no GitHub"
+      "technologies": ["TypeScript", "HTML5 Canvas 2D", "Vite", "Processamento de Imagem", "Web Performance (60 FPS)"],
+      "repoUrl": "https://github.com/JefteMartins/ascii-deconstructor",
+      "repoLabel": "Ver repositório no GitHub",
+      "interactiveAction": "image-picker"
+    },
+    {
+      "id": "organizador-de-aulas",
+      "index": "02",
+      "title": "HorarioProfs — Organizador de Aulas",
+      "scopeTag": "Repositório privado",
+      "visibility": "private",
+      "stackSummary": "React 19 · Electron · Tailwind v4 · PDF / CSV",
+      "summary": "Aplicação web e desktop para montagem de grades horárias escolares com múltiplos professores, turmas e restrições de disponibilidade — eliminando conflitos de horário e reduzindo janelas docentes.",
+      "context": "Repositório privado — entre em contato caso queira saber mais sobre o projeto ou ver uma demonstração.",
+      "imageSrc": "/assets/project-organizador-aulas.png",
+      "imageAlt": "Interface do HorarioProfs exibindo a grade automática de turmas sem janelas docentes e exportação em PDF",
+      "architectureFlow": ["Cadastro Escolar", "Restrições & Regras", "Grade Assistida & Manual", "Diagnóstico & PDF"],
+      "challenge": "Montar grades escolares manualmente entre múltiplas turmas, disciplinas e restrições individuais de professores consome dias da coordenação pedagógica e frequentemente gera choques de horário e janelas ociosas.",
+      "decisions": [
+        "Centralização do cadastro de professores, turmas, matrizes curriculares e janelas de disponibilidade em um fluxo guiado com validação contínua de conflitos.",
+        "Combinação de geração assistida da grade com ajuste manual por permuta direta entre tempos, visualização individual por professor, histórico de versões salvas e painel de diagnóstico.",
+        "Distribuição dupla (web e aplicativo desktop via Electron) com persistência local, importação/exportação CSV e impressão em PDF formatada para modo paisagem."
+      ],
+      "technologies": ["React 19", "Electron", "Vite", "Tailwind CSS v4", "HTML2PDF", "CSV / LocalStorage"],
+      "contactCtaLabel": "Entrar em contato"
+    },
+    {
+      "id": "good-hamburguer",
+      "index": "03",
+      "title": "GoodHamburguer — API .NET & Operações Blazor",
+      "scopeTag": "Open Source · Full Stack .NET",
+      "visibility": "public",
+      "stackSummary": ".NET 10 · C# · Blazor Server · MySQL · Docker · Testcontainers",
+      "summary": "Sistema full-stack de gestão de pedidos e cardápio em Clean Architecture + DDD, com API REST versionada (/api/v1), painel operacional Blazor, observabilidade, Docker Compose e testes com MySQL real.",
+      "context": "Repositório público com ambiente completo reproduzível em Docker Compose e esteira automatizada no GitHub Actions.",
+      "imageSrc": "/assets/project-goodhamburguer.png",
+      "imageAlt": "Painel operacional GoodHamburguer em Blazor Server conectado à API REST v1",
+      "architectureFlow": ["Blazor Server", "API REST /api/v1", "Domain & Pricing", "EF Core + MySQL"],
+      "challenge": "Estruturar uma aplicação .NET completa pronta para avaliação técnica — unindo regras de domínio isoladas, persistência relacional real, logs operacionais consultáveis e ambiente 100% reproduzível.",
+      "decisions": [
+        "Clean Architecture + DDD pragmático separando Domain, Application, Infrastructure (EF Core + MySQL), API versionada com ProblemDetails e frontend Blazor Server.",
+        "Middleware de logs operacionais persistidos em banco, health checks (/health/live e /health/ready), Serilog e OpenTelemetry para observabilidade de ponta a ponta.",
+        "Orquestração completa via Docker Compose (MySQL, migrations/seed, API e Blazor) acompanhada por testes unitários, de integração com Testcontainers e de UI Blazor."
+      ],
+      "technologies": [".NET 10", "C#", "ASP.NET Core", "Blazor Server", "EF Core", "MySQL", "Docker", "xUnit", "Testcontainers", "OpenTelemetry"],
+      "repoUrl": "https://github.com/JefteMartins/GoodHamburguer",
+      "repoLabel": "Ver repositório no GitHub"
     }
   ],
   "contact": {
