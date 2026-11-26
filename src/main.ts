@@ -1,10 +1,13 @@
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import './style.css';
+import { inject } from '@vercel/analytics';
 import rawPortfolioPt from './data/portfolio.json';
 import rawPortfolioEn from './data/portfolio.en.json';
 import type { PortfolioData, ProjectItem } from './types';
 import { AsciiDeconstructor } from './engine/asciiDeconstructor';
+
+inject();
 
 type Locale = 'pt' | 'en';
 
