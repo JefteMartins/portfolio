@@ -49,7 +49,7 @@ const UI_STRINGS: Record<
     htmlLang: 'pt-BR',
     navAria: 'Navegação principal',
     langAria: 'Selecionar idioma',
-    currentBadge: '● Em curso',
+    currentBadge: '● Em atividade',
     timelineHeading: 'Trajetória Profissional',
     stackAria: 'Tecnologias por categoria',
     projectsHeading: 'Projetos em Destaque',
