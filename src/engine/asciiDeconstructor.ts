@@ -30,6 +30,28 @@ function smoothstep(edge0: number, edge1: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
+// Preserva a matiz real do pixel ao ajustar luminância e aplica saturação exata (0.0 a 1.0)
+function applyColorSaturation(
+  pr: number,
+  pg: number,
+  pb: number,
+  rawLum: number,
+  targetLum255: number,
+  saturation: number
+): [number, number, number] {
+  const safeLum255 = Math.max(rawLum * 255, 8);
+  const gain = Math.min(2.6, targetLum255 / safeLum255);
+  const sr = Math.min(255, pr * gain);
+  const sg = Math.min(255, pg * gain);
+  const sb = Math.min(255, pb * gain);
+  const gray = sr * 0.299 + sg * 0.587 + sb * 0.114;
+  return [
+    Math.round(lerp(gray, sr, saturation)),
+    Math.round(lerp(gray, sg, saturation)),
+    Math.round(lerp(gray, sb, saturation))
+  ];
+}
+
 // Hash espacial determinístico em [0, 1)
 function cellHash(col: number, row: number): number {
   let n = (col * 374761393 + row * 668265263) ^ 0x5bf03635;
@@ -969,10 +991,15 @@ export class AsciiDeconstructor {
 
           if ((isWake && hSpawn > 0.35) || (isGlowingEdge && hSpawn > 0.965)) {
             const baseCx = Math.round((c + 0.5) * scaledCell);
-            const grayP = Math.min(250, Math.round(Math.max(prevL, rawLum) * 255 + 32));
-            const pColR = Math.min(255, Math.round(lerp(grayP, pr, 0.32)));
-            const pColG = Math.min(255, Math.round(lerp(grayP, pg, 0.35)));
-            const pColB = Math.min(255, Math.round(lerp(grayP + 10, pb, 0.45)));
+            const targetP = Math.min(250, Math.max(prevL, rawLum) * 255 + 28);
+            const [pColR, pColG, pColB] = applyColorSaturation(
+              pr,
+              pg,
+              pb,
+              rawLum,
+              targetP,
+              0.75
+            );
             this.spawnDriftParticle(baseCx, baseCy, pColR, pColG, pColB, hSpawn, gScale);
             spawnsThisFrame++;
           }
@@ -1000,7 +1027,7 @@ export class AsciiDeconstructor {
         const baseCx = Math.round((c + 0.5) * scaledCell);
 
         if (mode === 2) {
-          // ESTÁGIO 3: PARTICLE (baseado em particle.mp4)
+          // ESTÁGIO 3: PARTICLE (50% das cores originais)
           // Fundo preto puro; carpas renderizadas como nuvem densa de grãos finos luminosos com jitter orgânico
           if (normLum < 0.11) continue;
 
@@ -1008,10 +1035,8 @@ export class AsciiDeconstructor {
 
           const grainCount = normLum > 0.62 ? 3 : normLum > 0.34 ? 2 : 1;
           const jitterAmp = scaledCell * 0.72;
-          const gray = Math.min(255, Math.round(normLum * 255 + 24));
-          const cr = Math.min(255, Math.round(lerp(gray, pr, 0.52)) + 10);
-          const cg = Math.min(255, Math.round(lerp(gray, pg, 0.52)) + 10);
-          const cb = Math.min(255, Math.round(lerp(gray, pb, 0.58)) + 12);
+          const targetLum = Math.min(255, normLum * 235 + 28);
+          const [cr, cg, cb] = applyColorSaturation(pr, pg, pb, rawLum, targetLum, 0.5);
 
           for (let g = 0; g < grainCount; g++) {
             const phase = waveEnabled ? timeSec * 1.6 + g * 2.1 + hVal * 9.0 : g * 2.1;
@@ -1036,8 +1061,8 @@ export class AsciiDeconstructor {
         let cellAlpha255 = 255;
 
         if (mode === 1) {
-          // ESTÁGIO 2: DRIFT (baseado em drift.mp4)
-          // Malha fina e super detalhada de micro-ASCII: água em azul-ardósia sutil + carpas brancas de alta definição
+          // ESTÁGIO 2: DRIFT (75% das cores originais)
+          // Malha fina e super detalhada de micro-ASCII preservando 75% da cor natural das carpas e da água
           if (normLum < 0.055) continue;
           const boosted = Math.pow(sNormLum, 0.78);
           const rampIdx = clamp(
@@ -1048,23 +1073,19 @@ export class AsciiDeconstructor {
           ch = DRIFT_ASCII_RAMP[rampIdx];
 
           if (normLum >= 0.36) {
-            // Corpo das carpas super nítido em branco/prata com leve nuance quente/fria (~32% cor)
             if (normLum >= 0.66) stampWeight = 600;
-            const gray = Math.min(255, Math.round(170 + boosted * 85));
-            cr = Math.min(255, Math.round(lerp(gray, pr, 0.32)));
-            cg = Math.min(255, Math.round(lerp(gray, pg, 0.34)));
-            cb = Math.min(255, Math.round(lerp(gray + 4, pb, 0.38)));
+            const targetLum = Math.min(255, 165 + boosted * 90);
+            [cr, cg, cb] = applyColorSaturation(pr, pg, pb, rawLum, targetLum, 0.75);
             cellAlpha255 = Math.round(clamp(0.55 + boosted * 0.45, 0.45, 1) * overlayAlpha * 255);
           } else {
-            // Ondulações concêntricas da água em azul-aço frio discreto como em drift.mp4
             const tWater = clamp(normLum / 0.36, 0, 1);
-            cr = Math.round(lerp(56, 118, tWater));
-            cg = Math.round(lerp(82, 148, tWater));
-            cb = Math.round(lerp(116, 186, tWater));
-            cellAlpha255 = Math.round(lerp(0.14, 0.56, tWater) * overlayAlpha * 255);
+            const targetLum = lerp(82, 162, tWater);
+            [cr, cg, cb] = applyColorSaturation(pr, pg, pb, rawLum, targetLum, 0.75);
+            cellAlpha255 = Math.round(lerp(0.16, 0.58, tWater) * overlayAlpha * 255);
           }
         } else if (mode === 3) {
-          // ESTÁGIO 4: HYBRID — cristalização de micro-ASCII/partículas para grade binária monocromática
+          // ESTÁGIO 4: HYBRID (25% das cores originais)
+          // Cristalização para grade técnica mantendo ainda 25% da cor antes do P&B puro
           if (normLum < 0.065) continue;
           const boosted = Math.pow(normLum, 0.85);
           const rampIdx = clamp(
@@ -1075,10 +1096,8 @@ export class AsciiDeconstructor {
           ch = HYBRID_RAMP[rampIdx];
           if (normLum >= 0.62) stampWeight = 600;
 
-          const baseShade = Math.min(248, Math.round(125 + boosted * 123));
-          cr = Math.min(255, Math.round(lerp(baseShade, pr, 0.08)));
-          cg = Math.min(255, Math.round(lerp(baseShade, pg, 0.08)));
-          cb = Math.min(255, Math.round(lerp(Math.min(255, baseShade + 5), pb, 0.1)));
+          const targetLum = Math.min(248, 125 + boosted * 123);
+          [cr, cg, cb] = applyColorSaturation(pr, pg, pb, rawLum, targetLum, 0.25);
 
           const alphaFactor =
             normLum < 0.28

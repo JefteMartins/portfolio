@@ -156,7 +156,7 @@
       "imageSrc": "./assets/project-organizador-aulas.png",
       "imageAlt": "HorarioProfs interface displaying an automated conflict-free class schedule with PDF export",
       "architectureFlow": ["School Setup", "Rules & Constraints", "Assisted & Manual Grid", "Diagnostics & PDF"],
-      "challenge": "Building school timetables manually across dozens of classes, subjects, and individual teacher availability windows takes days for coordinators and often introduces clashes and idle gaps.",
+      "challenge": "School timetabling is an NP-Hard problem: reconciling multiple classes, curriculum loads, teacher clashes, and individual availability constraints creates a combinatorial explosion that is impractical to solve manually without conflicts or idle gaps.",
       "decisions": [
         "Unified management of teachers, classes, curricula, and availability windows in a guided flow with continuous conflict validation.",
         "Combines assisted timetable generation with direct slot-swap manual editing, per-teacher views, saved schedule versions, and a diagnostics panel.",

@@ -521,14 +521,12 @@ function renderApp(): void {
         <section id="sobre" class="section-block">
           <div class="section-header">
             <h2 class="section-title">${escapeHtml(data.about.sectionTitle)}</h2>
-            <span class="mono-label">02 · DRIFT</span>
           </div>
           <p class="about-summary">${escapeHtml(data.about.summary)}</p>
 
           <div id="experiencia">
-            <div class="timeline-heading timeline-heading--split">
+            <div class="timeline-heading">
               <span class="mono-label">${escapeHtml(ui.timelineHeading)}</span>
-              <span class="mono-label">03 · PARTICLE</span>
             </div>
             <ol class="timeline-list">
               ${experiencesHtml}
@@ -547,7 +545,6 @@ function renderApp(): void {
         <section id="projetos" class="section-block">
           <div class="section-header">
             <h2 class="section-title">${escapeHtml(data.stackSection.sectionTitle)}</h2>
-            <span class="mono-label">04 · HYBRID</span>
           </div>
 
           <div class="stack-matrix" aria-label="${escapeHtml(ui.stackAria)}">
@@ -566,7 +563,6 @@ function renderApp(): void {
         <section id="contato" class="section-block contact-section">
           <div class="section-header">
             <h2 class="section-title">${escapeHtml(data.contact.sectionTitle)}</h2>
-            <span class="mono-label">05 · BIN</span>
           </div>
           <p class="contact-lead">${escapeHtml(data.contact.lead)}</p>
 

@@ -156,7 +156,7 @@
       "imageSrc": "./assets/project-organizador-aulas.png",
       "imageAlt": "Interface do HorarioProfs exibindo a grade automática de turmas sem janelas docentes e exportação em PDF",
       "architectureFlow": ["Cadastro Escolar", "Restrições & Regras", "Grade Assistida & Manual", "Diagnóstico & PDF"],
-      "challenge": "Montar grades escolares manualmente entre múltiplas turmas, disciplinas e restrições individuais de professores consome dias da coordenação pedagógica e frequentemente gera choques de horário e janelas ociosas.",
+      "challenge": "A montagem de grades escolares (timetabling) é um problema NP-Hard: conciliar múltiplas turmas, cargas curriculares, choques de docentes e restrições individuais de disponibilidade gera uma explosão combinatória inviável de resolver manualmente sem causar conflitos ou janelas ociosas.",
       "decisions": [
         "Centralização do cadastro de professores, turmas, matrizes curriculares e janelas de disponibilidade em um fluxo guiado com validação contínua de conflitos.",
         "Combinação de geração assistida da grade com ajuste manual por permuta direta entre tempos, visualização individual por professor, histórico de versões salvas e painel de diagnóstico.",
